@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, Text, View, SafeAreaView, Image } from 'react-native'
+import { StyleSheet, Text, View, SafeAreaView, Image, TouchableOpacity } from 'react-native'
 import SafeViewAndroid from '../components/SafeViewAndroid';
 import tw from 'tailwind-react-native-classnames';
 import NavOptions from '../components/NavOptions';
@@ -8,9 +8,19 @@ import { GOOGLE_MAPS_APIKEY } from '@env';
 import { useDispatch } from 'react-redux';
 import { setDestination, setOrigin } from '../slices/navSlice';
 import NavFavourites from '../components/NavFavourites';
+import { firebase } from '../firebase'
 
 const HomeScreen = () => {
   const dispatch = useDispatch();
+
+  const handleSignout = async () => {
+    try {
+      await firebase.auth().signOut().then(() => console.log("Signed Out"));
+      console.log("Signed out successfully!")
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   return (
     <SafeAreaView style={[SafeViewAndroid.AndroidSafeAreaTop, tw`bg-white h-full`]}>
@@ -23,6 +33,13 @@ const HomeScreen = () => {
             uri: "https://links.papareact.com/gzs",
           }}
         />
+
+      <TouchableOpacity onPress={handleSignout} style={{height: 100, width: 100, backgroundColor: "black"}}>
+        <Image
+          style={styles.logo}
+          source={{ uri: "https://img.icons8.com/fluency-systems-regular/60/ffffff/sent.png" }}
+        />
+      </TouchableOpacity>
 
         <GooglePlacesAutocomplete
           placeholder="Where from?"
