@@ -8,7 +8,9 @@ import { GOOGLE_MAPS_APIKEY } from '@env';
 import { useDispatch } from 'react-redux';
 import { setDestination, setOrigin } from '../slices/navSlice';
 import NavFavourites from '../components/NavFavourites';
-import { firebase } from '../firebase'
+import { firebase } from '../firebase';
+// keyboard avoiding view
+import KeyboardAvoidingWrapper from './../components/KeyboardAvoidingWrapper';
 
 const HomeScreen = () => {
   const dispatch = useDispatch();
@@ -23,6 +25,7 @@ const HomeScreen = () => {
   }
 
   return (
+
     <SafeAreaView style={[SafeViewAndroid.AndroidSafeAreaTop, tw`bg-white h-full`]}>
       <View style={tw`p-5`}>
         <Image 
@@ -34,12 +37,12 @@ const HomeScreen = () => {
           }}
         />
 
-      <TouchableOpacity onPress={handleSignout} style={{height: 100, width: 100, backgroundColor: "black"}}>
-        <Image
-          style={styles.logo}
-          source={{ uri: "https://img.icons8.com/fluency-systems-regular/60/ffffff/sent.png" }}
-        />
-      </TouchableOpacity>
+        <TouchableOpacity onPress={handleSignout} style={{height: 100, width: 100, backgroundColor: "black"}}>
+          <Image
+            style={styles.logo}
+            source={{ uri: "https://img.icons8.com/fluency-systems-regular/60/ffffff/sent.png" }}
+          />
+        </TouchableOpacity>
 
         <GooglePlacesAutocomplete
           placeholder="Where from?"
@@ -74,7 +77,7 @@ const HomeScreen = () => {
         <NavOptions />
         <NavFavourites />
       </View>
-    </SafeAreaView>
+   </SafeAreaView>    
   )
 }
 
