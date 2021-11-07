@@ -81,7 +81,7 @@ ParQ can be run on Android devices using official ParQ APK releases. ParQ's back
 
 ### Deployment Diagram
 
-[insert diagram]
+![uml-diagrams-Deployment Diagram drawio (2)](https://user-images.githubusercontent.com/30096267/140662746-6fcce5f7-1fab-4645-b330-3f7a1a2f7439.png)
 
 ## License
 
