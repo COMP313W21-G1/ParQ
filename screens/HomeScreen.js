@@ -44,7 +44,7 @@ const HomeScreen = () => {
           />
         </TouchableOpacity>
 
-        <GooglePlacesAutocomplete
+        {/* <GooglePlacesAutocomplete
           placeholder="Where from?"
           styles={{
             container: {
@@ -72,7 +72,7 @@ const HomeScreen = () => {
           }}
           nearbyPlacesAPI="GooglePlacesSearch"
           debounce={400}
-        />
+        /> */}
 
         <NavOptions />
         <NavFavourites />

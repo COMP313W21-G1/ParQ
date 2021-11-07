@@ -9,7 +9,7 @@ import { selectOrigin } from '../slices/navSlice'
 const data = [
   {
     id: "123",
-    title: "Get a ride",
+    title: "Find Parking",
     image: "https://links.papareact.com/3pn",
     screen: "MapScreen",
   },
@@ -34,9 +34,9 @@ const NavOptions = () => {
         <TouchableOpacity
           onPress={() => navigation.navigate(item.screen)}
           style={tw`p-2 pl-6 pb-8 pt-4 bg-gray-200 m-2 w-40`}
-          disabled={!origin}
+          disabled={origin}
         >
-          <View style={tw`${!origin && "opacity-20"}`}>
+          <View style={tw`${origin && "opacity-20"}`}>
             <Image 
               style={{ width: 120, height: 120, resizeMode: "contain" }}
               source={{uri: item.image}}
