@@ -2,9 +2,7 @@
 
 The ParQ mobile app enables drivers to find available parking and rates from parking vendors in their area and parking lots available from 3rd party APIs, e.g., [Google Maps API](https://developers.google.com/maps), [SpotHero API](https://spothero.com/developers), [ParkMe API](https://www.parkme.com/). Parking vendors can register their parking locations on ParQ and drivers can reserve those parking spots in the ParQ app. There are plans to integrate a payment system in the future to accompany the parking vendor's booking system.
 
-[insert screenshot of ParQ]
-
-[insert caption]
+![image](https://user-images.githubusercontent.com/30096267/140679735-6eed7a68-12b4-4b2a-b789-bb15664d3347.png)
 
 ParQ is built with [React Native](https://reactnative.dev/) (with [Expo](https://expo.dev/)), and [Firebase](https://firebase.google.com/), and runs on [Android](https://developer.android.com/).
 
