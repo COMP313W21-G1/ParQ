@@ -8,9 +8,12 @@ import {
 } from "react-native";
 import { Icon } from "react-native-elements";
 import tw from "tailwind-react-native-classnames";
-import { useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useNavigation } from "@react-navigation/core";
 import { firebase, db } from "../firebase";
+import { selectOrigin, setOrigin } from "../slices/navSlice";
+import { MapScreen } from "../screens/MapScreen";
+import MapView from "react-native-maps";
 
 const data1 = [
   {
@@ -81,8 +84,14 @@ const deleteFavorite = async (docId) => {
     });
 };
 
+const navigateToFavorite = (location) => {
+  console.log(location);
+};
+
 const NavFavourites = () => {
   const [faves, setFaves] = useState([]);
+  const navigation = useNavigation();
+  const [region, setRegion] = React.useState({});
 
   useEffect(() => {
     try {
@@ -122,7 +131,18 @@ const NavFavourites = () => {
         <View style={[tw`bg-gray-200`, { height: 0.5 }]} />
       )}
       renderItem={({ item: { location, name, address, docId } }) => (
-        <TouchableOpacity style={tw`flex-row items-center p-5`}>
+        <TouchableOpacity
+          style={tw`flex-row items-center p-5`}
+          onPress={() => {
+            //console.log(location);
+            //setOrigin(location);
+            //setRegion(location);
+            //navigation.setParams("MapOrigin2", location);
+            navigation.navigate("MapScreen", {
+              location: location,
+            });
+          }}
+        >
           <Icon
             style={tw`mr-4 rounded-full bg-gray-300 p-3`}
             name="location"
@@ -136,13 +156,13 @@ const NavFavourites = () => {
               <Text style={tw`text-gray-500`}>{address}</Text>
             </View>
             <TouchableOpacity
-              style={tw`justify-start`}
+              style={tw`flex-row justify-start `}
               onPress={() => {
                 deleteFavorite(docId);
               }}
             >
               <Icon
-                style={tw`flex-row rounded-full bg-gray-100 p-3 ml-20`}
+                style={tw`flex-row rounded-full bg-gray-100 p-3 ml-24`}
                 name="erase"
                 type="entypo"
                 color="black"
