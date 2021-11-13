@@ -54,13 +54,15 @@ export async function getBookedSpots(spotsRetreived) {
 
 
 export function convertDateTime(time) {
-  const fireBaseTime = new Date(
+  if (type of time !== "undefined") {
+    const fireBaseTime = new Date(
     time.seconds * 1000 + time.nanoseconds / 1000000,
-  );
-  const date = fireBaseTime.toDateString();
-  const atTime = fireBaseTime.toLocaleTimeString();
+    );
+    const date = fireBaseTime.toDateString();
+    const atTime = fireBaseTime.toLocaleTimeString();
 
- // console.log(date, atTime);
-  return `${date}, ${atTime}`
+   // console.log(date, atTime);
+    return `${date}, ${atTime}`
+  }
 }
 
