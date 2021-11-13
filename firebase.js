@@ -54,7 +54,7 @@ export async function getBookedSpots(spotsRetreived) {
 
 
 export function convertDateTime(time) {
-  if (type of time !== "undefined") {
+  if (typeof time !== "undefined") {
     const fireBaseTime = new Date(
     time.seconds * 1000 + time.nanoseconds / 1000000,
     );
