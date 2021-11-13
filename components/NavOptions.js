@@ -15,9 +15,15 @@ const data = [
   },
   {
     id: "456",
-    title: "Order food",
+    title: "Reservations",
     image: "https://links.papareact.com/28w",
-    screen: "EatsScreen", // change in future
+    screen: "ReservationScreen", 
+  },
+  {
+    id: "789",
+    title: "Profile",
+    image: "https://www.gardeningknowhow.com/wp-content/uploads/2021/07/sulfur-cosmos-mexican-aster-flowers.jpg",
+    screen: "ProfileScreen", // change in future
   },
 ]
 

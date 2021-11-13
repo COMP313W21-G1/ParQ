@@ -23,3 +23,46 @@ const firebaseConfig = {
 const db = firebase.firestore();
 
 export { firebase, db }
+
+
+export async function getBookedSpots(spotsRetreived) {
+
+  var spotsList ;
+  var snapshot = await 
+    db.collection(`bookedSpots`)
+    .where("owner_uid", "==", `${await firebase.auth().currentUser.uid}`)
+    .get()
+  spotsList = [];
+  snapshot.forEach((doc) => {
+    const spotItem = doc.data();
+    spotItem.id = doc.id;
+    //console.log(spotItem);
+    spotsList.push({
+      end: doc.data().end,
+      location: doc.data().location,
+      name: doc.data().name,
+      owner_uid: doc.data().owner_uid,
+      parkingLotId: doc.data().parkingLotId,
+      parkingSpotId: doc.data().parkingLotId,
+      start: doc.data().start,
+    });
+  });
+  
+  spotsRetreived(spotsList);
+}
+
+
+
+export function convertDateTime(time) {
+  if (typeof time !== "undefined") {
+    const fireBaseTime = new Date(
+    time.seconds * 1000 + time.nanoseconds / 1000000,
+    );
+    const date = fireBaseTime.toDateString();
+    const atTime = fireBaseTime.toLocaleTimeString();
+
+   // console.log(date, atTime);
+    return `${date}, ${atTime}`
+  }
+}
+
