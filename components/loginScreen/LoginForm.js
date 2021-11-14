@@ -10,7 +10,6 @@ import {
 } from "react-native";
 
 import { firebase } from '../../firebase'
-
 import { Formik } from "formik";
 import * as Yup from "yup";
 import Validator from "email-validator";
@@ -20,9 +19,7 @@ const LoginForm = () => {
   const navigation = useNavigation();
   const LoginFormSchema = Yup.object().shape({
     email: Yup.string().email().required("An email is required"),
-    password: Yup.string()
-      .required()
-      .min(6, "Your password has to have at least 6 characters"),
+    password: Yup.string().required().min(6, "Your password has to have at least 6 characters"),
   });
 
   const onLogin = async (email, password) => {
@@ -97,8 +94,8 @@ const LoginForm = () => {
                 value={values.password}
               />
             </View>
-            <View style={{ alignItems: "flex-end", marginBottom: 30 }}>
-              <Text style={{ color: "#6BB0F5" }}>Forgot password?</Text>
+            <View style={{ flexDirection: "row", justifyContent: 'space-between', marginBottom: 30 }}>
+              <Text style={{ color: "#6BB0F5", fontSize: 12 }}>Forgot password?</Text>
             </View>
 
             <Pressable
@@ -155,6 +152,12 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginTop: 50,
   },
+
+  dropdownStyle: {
+    marginLeft: -15,
+    width: '100%',
+    backgroundColor: '#CCC'
+  }
 });
 
 export default LoginForm;
