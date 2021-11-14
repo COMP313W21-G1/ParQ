@@ -10,7 +10,6 @@ import {
 } from "react-native";
 
 import { firebase } from '../../firebase'
-import ModalDropdown from 'react-native-modal-dropdown';
 import { Formik } from "formik";
 import * as Yup from "yup";
 import Validator from "email-validator";
@@ -96,13 +95,6 @@ const LoginForm = () => {
               />
             </View>
             <View style={{ flexDirection: "row", justifyContent: 'space-between', marginBottom: 30 }}>
-              <ModalDropdown
-                defaultValue="Please select type ..."
-                textStyle={{ color: "#6BB0F5", fontSize: 12 }}
-                dropdownStyle={{ height: 70 }}
-                options={['Driver', 'Vendor']}
-                onSelect={(value) => {} }
-              />
               <Text style={{ color: "#6BB0F5", fontSize: 12 }}>Forgot password?</Text>
             </View>
 

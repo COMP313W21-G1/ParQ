@@ -45,7 +45,7 @@ const SignupForm = () => {
 
   const navigation = useNavigation();
   const SignupFormSchema = Yup.object().shape({
-    type: Yup.string().required("A type is required"),
+    type: Yup.string().required("An account type is required"),
     email: Yup.string().email().required("An email is required"),
     firstname: Yup.string().required().min(2, "A first name is required"),
     lastname: Yup.string().required().min(2, "A last name is required"),
@@ -135,8 +135,9 @@ const SignupForm = () => {
                 // textStyle={styles.dropdown_2_text}
                 dropdownStyle={styles.dropdown}
                 options={['Driver', 'Vendor']}
-                onSelect={value => values.type = value}
-                value = {values.type}
+                onSelect={(index, value) => {
+                  values.type = value;
+                }}
               />
             </View>
 
