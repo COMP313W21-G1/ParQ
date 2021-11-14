@@ -5,9 +5,16 @@ import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplet
 import { useNavigation } from "@react-navigation/core";
 
 export default function App(location) {
+  const faveOrigin = {
+    latitude: location?.route?.params?.location?.latitude,
+    longitude: location?.route?.params?.location?.longitude,
+    latitudeDelta: 0.05,
+    longitudeDelta: 0.05,
+  };
+
   const [pin, setPin] = React.useState({
-    latitude: 43.7131722,
-    longitude: -79.2563805,
+    latitude: faveOrigin ? faveOrigin?.latitude : 43.7131722,
+    longitude: faveOrigin ? faveOrigin?.longitude : -79.2563805,
   });
   const [region, setRegion] = React.useState({
     latitude: 43.7131722,
@@ -15,9 +22,8 @@ export default function App(location) {
     latitudeDelta: 0.0922,
     longitudeDelta: 0.0421,
   });
-
-  const faveOrigin = location?.route?.params;
-  console.log(faveOrigin?.location?.latitude, faveOrigin?.location?.longitude);
+  //console.log(faveOrigin?.location?.latitude, faveOrigin?.location?.longitude);
+  console.log(pin);
   return (
     <View style={{ marginTop: 30, flex: 1 }}>
       <GooglePlacesAutocomplete
@@ -56,12 +62,7 @@ export default function App(location) {
       />
       <MapView
         style={styles.map}
-        initialRegion={{
-          latitude: 43.7131722,
-          longitude: -79.2563805,
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421,
-        }}
+        initialRegion={!faveOrigin ? region : faveOrigin}
         provider="google"
       >
         <Marker
