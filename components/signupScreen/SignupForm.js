@@ -10,7 +10,7 @@ import {
 } from "react-native";
 
 import { firebase, db } from "../../firebase";
-
+import ModalDropdown from 'react-native-modal-dropdown';
 import { Formik } from "formik";
 import * as Yup from "yup";
 import Validator from "email-validator";
@@ -45,6 +45,7 @@ const SignupForm = () => {
 
   const navigation = useNavigation();
   const SignupFormSchema = Yup.object().shape({
+    type: Yup.string().required("A type is required"),
     email: Yup.string().email().required("An email is required"),
     firstname: Yup.string().required().min(2, "A first name is required"),
     lastname: Yup.string().required().min(2, "A last name is required"),
@@ -54,12 +55,8 @@ const SignupForm = () => {
     //city: Yup.string().required().min(2, "A city is required"),
     //province: Yup.string().required().min(2, "A province is required"),
     phone: Yup.string().required().min(7, "A phone number is required"),
-    password: Yup.string()
-      .required()
-      .min(6, "Your password has to have at least 6 characters"),
-    confirmpassword: Yup.string()
-      .required()
-      .min(6, "Your password has to have at least 6 characters"),
+    password: Yup.string().required().min(6, "Your password has to have at least 6 characters"),
+    confirmpassword: Yup.string().required().min(6, "Your password has to have at least 6 characters"),
   });
 
   const getRandomProfilePicture = async () => {
@@ -69,12 +66,12 @@ const SignupForm = () => {
   };
 
   //const onSignup = async (email, password,firstname, lastname, streetaddress, city, province, postalcode, username, phone) => {
-  const onSignup = async ( firstname, lastname, username, email, phone, address, password, confirmpassword) => {
+  const onSignup = async ( type, firstname, lastname, username, email, phone, address, password, confirmpassword) => {
 
     // perform all neccassary validations
     if (password !== confirmpassword) {
         alert("Passwords don't match");
-    } 
+    }
     else {
 
       try {
@@ -82,20 +79,23 @@ const SignupForm = () => {
           .auth()
           .createUserWithEmailAndPassword(email, password);
         console.log("Firebase User Created Successfully!");
+        Alert.alert("Firebase User Created Successfully!");
 
         db.collection("users")
-        .doc(authUser.user.email)
-        .set({ 
-          owner_uid: authUser.user.uid,           
-          firstname: firstname,
-          lastname: lastname,
-          username: username,
-          email: authUser.user.email,
-          phone: phone,  
-          address: address,
-          profile_picture: await getRandomProfilePicture(),
-        });
+          .doc(authUser.user.email)
+          .set({
+            owner_uid: authUser.user.uid,
+            firstname: firstname,
+            lastname: lastname,
+            username: username,
+            email: authUser.user.email,
+            phone: phone,
+            address: address,
+            type: type,
+            profile_picture: await getRandomProfilePicture(),
+          });
       } catch (error) {
+        console.log(error.message);
         Alert.alert("Attention!", error.message);
       }
     }
@@ -103,20 +103,42 @@ const SignupForm = () => {
   };
 
   return (
-    
-    <View 
+
+    <View
     style={styles.wrapper}>
       <Formik
-        initialValues={{firstname: "", lastname: "",  username: "", email: "",   phone: "", address: "", password: "",  confirmpassword: ""}}
+        initialValues={{type: "", firstname: "", lastname: "",  username: "", email: "",   phone: "", address: "", password: "",  confirmpassword: ""}}
         onSubmit={(values) => {
-          onSignup( values.firstname, values.lastname, values.username,  values.email, values.phone, values.address, values.password, values.confirmpassword );
+          onSignup( values.type, values.firstname, values.lastname, values.username,  values.email, values.phone, values.address, values.password, values.confirmpassword );
         }}
         validationSchema={SignupFormSchema}
         validateOnMount={true}
       >
         {({ handleChange, handleBlur, handleSubmit, values, isValid }) => (
           <>
-
+            <View
+              style={[
+                styles.inputField,
+                {
+                  borderColor:
+                    1 > values.type.length || values.type.length >= 2
+                      ? "#CCC"
+                      : "red",
+                },
+              ]}
+            >
+              <ModalDropdown
+                defaultValue="Please select type ..."
+                textStyle={{ fontSize: 14 }}
+                // dropdownStyle={{ height: 70 }}
+                // style={styles.dropdown_2}
+                // textStyle={styles.dropdown_2_text}
+                dropdownStyle={styles.dropdown}
+                options={['Driver', 'Vendor']}
+                onSelect={value => values.type = value}
+                value = {values.type}
+              />
+            </View>
 
             <View
               style={[
@@ -247,9 +269,9 @@ const SignupForm = () => {
                 },
               ]}
             >
-              {/* 
+              {/*
               <GooglePlacesAutocomplete
-                
+
                 styles={{
                   container: {
                     flex: 0,
@@ -325,7 +347,7 @@ const SignupForm = () => {
                   },
                 }}
               />*/}
-               
+
            <TextInput
                 placeholderTextColor="#444"
                 placeholder="Home Address"
@@ -361,8 +383,8 @@ const SignupForm = () => {
                 setHidePassword={setHidePassword}
               />
 
-              
-              <TouchableOpacity 
+
+              <TouchableOpacity
                 style={styles.rightIcon}
                 onPress={() => {
                   setHidePassword(!hidePassword);
@@ -395,7 +417,7 @@ const SignupForm = () => {
                 hidePassword={hidePassword2}
                 setHidePassword={setHidePassword2}
               />
-              <TouchableOpacity 
+              <TouchableOpacity
                 style={styles.rightIcon}
                 onPress={() => {
                   setHidePassword2(!hidePassword2);
@@ -431,7 +453,7 @@ export default SignupForm;
 
 const styles = StyleSheet.create({
   wrapper: {
-    marginTop: 80,
+    marginTop: 30,
   },
 
   inputField: {
@@ -449,7 +471,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     minHeight: 42,
     borderRadius: 4,
-    marginTop: 50,
+    marginTop: 30,
   }),
 
   buttonText: {
@@ -461,21 +483,27 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     width: "100%",
     justifyContent: "center",
-    marginTop: 50,
+    marginTop: 30,
+    marginBottom: 50,
   },
 
-  rightIcon: {    
+  rightIcon: {
     alignSelf: 'flex-end',
   },
 
-  passwordInput: {    
+  passwordInput: {
     //alignSelf: 'flex-end',
     //left: 0,
     //padding: 10,
     //paddingLeft: 55,
     //position: "absolute",
-    //zIndex: 1,  
-    //flexDirection: "row",  
+    //zIndex: 1,
+    //flexDirection: "row",
     width: "88%",
-  }
+  },
+
+  dropdown: {
+    fontSize: 18,
+    height: 70
+  },
 });
