@@ -5,6 +5,7 @@ import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplet
 import { useNavigation } from "@react-navigation/core";
 
 export default function App(location) {
+  console.log("location = ", location);
   const faveOrigin = {
     latitude: location?.route?.params?.location?.latitude,
     longitude: location?.route?.params?.location?.longitude,
@@ -12,15 +13,18 @@ export default function App(location) {
     longitudeDelta: 0.05,
   };
 
-  const [pin, setPin] = React.useState({
-    latitude: faveOrigin ? faveOrigin?.latitude : 43.7131722,
-    longitude: faveOrigin ? faveOrigin?.longitude : -79.2563805,
-  });
   const [region, setRegion] = React.useState({
     latitude: 43.7131722,
     longitude: -79.2563805,
     latitudeDelta: 0.0922,
     longitudeDelta: 0.0421,
+  });
+
+  const [pin, setPin] = React.useState({
+    latitude:
+      location.route.params === undefined ? 43.7131722 : faveOrigin.latitude,
+    longitude:
+      location.route.params === undefined ? -79.2563805 : faveOrigin.longitude,
   });
   //console.log(faveOrigin?.location?.latitude, faveOrigin?.location?.longitude);
   console.log(pin);
@@ -62,7 +66,14 @@ export default function App(location) {
       />
       <MapView
         style={styles.map}
-        initialRegion={!faveOrigin ? region : faveOrigin}
+        // initialRegion={
+        //   location?.route?.params?.location?.latitude === null
+        //     ? region
+        //     : faveOrigin
+        // }
+        initialRegion={
+          location.route.params === undefined ? region : faveOrigin
+        }
         provider="google"
       >
         <Marker

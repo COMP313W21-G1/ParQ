@@ -39,7 +39,7 @@ const data1 = [
 // let count = 0;
 function onResult(QuerySnapshot) {
   let faves = [];
-  console.log(QuerySnapshot[0].data());
+  //console.log(QuerySnapshot[0].data());
   //console.log(QuerySnapshot);
   QuerySnapshot.forEach((item) => {
     console.log(item.id);
@@ -85,7 +85,7 @@ const deleteFavorite = async (docId) => {
 };
 
 const navigateToFavorite = (location) => {
-  console.log(location);
+  //console.log(location);
 };
 
 const NavFavourites = () => {
@@ -151,11 +151,11 @@ const NavFavourites = () => {
             }}
           >
             <Icon
-              style={tw`rounded-full bg-gray-100 p-2 `}
-              name="erase"
-              type="entypo"
-              color="black"
-              size={20}
+              style={tw`rounded-full p-2 `}
+              name="cancel"
+              type="MaterialIcons"
+              color="red"
+              size={28}
             />
           </TouchableOpacity>
         </TouchableOpacity>

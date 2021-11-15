@@ -5,7 +5,7 @@
 
 // expo doesn't support firebase v9 yet
 // we instead use firebase@8.2.3
-import firebase from 'firebase';
+import firebase from "firebase";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -22,47 +22,79 @@ const firebaseConfig = {
 
 const db = firebase.firestore();
 
-export { firebase, db }
-
+export { firebase, db };
 
 export async function getBookedSpots(spotsRetreived) {
-
-  var spotsList ;
-  var snapshot = await 
-    db.collection(`bookedSpots`)
+  var spotsList;
+  return db
+    .collection(`bookedSpots`)
     .where("owner_uid", "==", `${await firebase.auth().currentUser.uid}`)
-    .get()
-  spotsList = [];
-  snapshot.forEach((doc) => {
-    const spotItem = doc.data();
-    spotItem.id = doc.id;
-    //console.log(spotItem);
-    spotsList.push({
-      end: doc.data().end,
-      location: doc.data().location,
-      name: doc.data().name,
-      owner_uid: doc.data().owner_uid,
-      parkingLotId: doc.data().parkingLotId,
-      parkingSpotId: doc.data().parkingLotId,
-      start: doc.data().start,
+    .onSnapshot((snapshot) => {
+      spotsList = [];
+      snapshot.forEach((doc) => {
+        const spotItem = doc.data();
+        spotItem.id = doc.id;
+        //console.log(spotItem);
+        spotsList.push({
+          end: doc.data().end,
+          location: doc.data().location,
+          name: doc.data().name,
+          owner_uid: doc.data().owner_uid,
+          parkingLotId: doc.data().parkingLotId,
+          parkingSpotId: doc.data().parkingLotId,
+          start: doc.data().start,
+          docId: doc.id,
+        });
+      });
+      spotsRetreived(spotsList);
     });
-  });
-  
-  spotsRetreived(spotsList);
+  // return snapshot;
 }
 
+// export async function getBookedSpots(spotsRetreived) {
+//   var spotsList;
+//   var snapshot = await db
+//     .collection(`bookedSpots`)
+//     .where("owner_uid", "==", `${await firebase.auth().currentUser.uid}`)
+//     .get();
+//   spotsList = [];
+//   snapshot.forEach((doc) => {
+//     const spotItem = doc.data();
+//     spotItem.id = doc.id;
+//     //console.log(spotItem);
+//     spotsList.push({
+//       end: doc.data().end,
+//       location: doc.data().location,
+//       name: doc.data().name,
+//       owner_uid: doc.data().owner_uid,
+//       parkingLotId: doc.data().parkingLotId,
+//       parkingSpotId: doc.data().parkingLotId,
+//       start: doc.data().start,
+//       docId: doc.id,
+//     });
+//   });
 
+//   spotsRetreived(spotsList);
+// }
+
+export async function deleteBookedSpot(docId) {
+  db.collection("bookedSpots")
+    .doc(docId)
+    .delete()
+    .then((result) => {
+      //console.log(result);
+    });
+}
 
 export function convertDateTime(time) {
   if (typeof time !== "undefined") {
     const fireBaseTime = new Date(
-    time.seconds * 1000 + time.nanoseconds / 1000000,
+      time.seconds * 1000 + time.nanoseconds / 1000000
     );
     const date = fireBaseTime.toDateString();
     const atTime = fireBaseTime.toLocaleTimeString();
 
-   // console.log(date, atTime);
-    return `${date}, ${atTime}`
+    // console.log(date, atTime);
+    return `${date}, ${atTime}`;
   }
 }
-
