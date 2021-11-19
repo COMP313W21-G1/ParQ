@@ -1,59 +1,65 @@
 
-import { StyleSheet, Text, View, SafeAreaView, Image, TouchableOpacity, FlatList, StatusBar } from 'react-native'
+import { StyleSheet, Text, View, SafeAreaView, Image, TouchableWithoutFeedback, FlatList, StatusBar } from 'react-native'
 
 import tw from 'tailwind-react-native-classnames';
 
-import {  convertDateTime, getBookedSpots } from "../firebase";
+import { getReservedParkingSpotInfo, convertDateTime, getReservations } from "../firebase";
 import React, {   useEffect, useState} from 'react';
 
 
 
-const ListItem = ({ location, name, start, end  }) => (
-  <View>
+const ReservationItem = ({ item }) => (
+  <View> 
       <View style={tw`flex-row`}>
             <View style={tw`justify-start`}>
-              <Text style={tw`font-semibold text-lg`}>{name}</Text>
-              <Text style={tw`text-gray-500`}>{location}</Text>
-              <Text style={tw`text-gray-500`}>Start Time: {convertDateTime(start)}</Text>
-              <Text style={tw`text-gray-500`}>End time: {convertDateTime(end)}</Text>
-            </View>
-        </View>
-  </View>
-);
+              <Text style={tw`font-semibold text-lg`}>Spot Id: {item.parkingSpotId}</Text>
+              <Text style={tw`text-gray-500`}>Start Time: {convertDateTime(item.start)}</Text>
+              <Text style={tw`text-gray-500`}>End time: {convertDateTime(item.end)}</Text>
+              <Text style={tw`text-gray-500`}>Address: {item.spotInfo.parkingAddress}</Text>
+              <Text style={tw`text-gray-500`}>Type: {item.spotInfo.parkingSpots.type}</Text>
+            </View> 
+        </View>  
+  </View> 
+);  
 
-
+function actionOnRow(item) {
+  console.log('Selected Item :',item);
+};
+ 
 const ReservationScreen = () => {
 
-  const [spotsList, setSpotsList] = useState([]);
+  const [reservationsList, setReservationsList] = useState([]);
 
   useEffect(() => {
-    try {
-      getBookedSpots(setSpotsList)
-    } catch (error) {
-      console.log(error.message);
-    }
+      try {        
+        getReservations(setReservationsList);
+      } catch (error) {
+        console.log(error.message);
+      }           
   }, []);
-
-
-
-  return (spotsList.length > 0 ) ?
+  
+  return (reservationsList.length > 0 ) ?
  
   //if spots are available, add them to the view
     <SafeAreaView style={styles.container}>
+      <Text style={tw`font-semibold text-lg`}>Reservation History</Text>
 
       <FlatList
-        data={spotsList}
-        keyExtractor={item => item.name}
+        data={reservationsList} 
+        keyExtractor={item => item.id}
             ItemSeparatorComponent={() => (
           <View style={[tw`bg-gray-200`, { height: 0.5 }]} />
         )}
-        renderItem={({ item: { location, name, start, end } })  => (
-          <ListItem
-            name={name}
-            location={location}
-            start={start}
-            end={end}
-          />
+         renderItem={({ item })  => (
+          <>
+            <TouchableWithoutFeedback onPress={ () => {console.log('Selected Item :',item);}}>
+                <ReservationItem
+                  key= {id}
+                  id = {id}
+                  item = {item}
+                />  
+              </TouchableWithoutFeedback>
+          </>
         )}
       />
     </SafeAreaView>
@@ -65,7 +71,6 @@ const ReservationScreen = () => {
       <Text style={styles.emptySubtitle}>Add a new reservation from the map screen</Text>     
     </View>
 }
-//}
 
 const styles = StyleSheet.create({
 container: {
