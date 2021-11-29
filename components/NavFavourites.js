@@ -6,6 +6,8 @@ import {
   TouchableOpacity,
   SafeAreaView,
   View,
+  ScrollView,
+  LogBox,
 } from "react-native";
 import { Icon } from "react-native-elements";
 import tw from "tailwind-react-native-classnames";
@@ -16,51 +18,32 @@ import { selectOrigin, setOrigin } from "../slices/navSlice";
 import { MapScreen } from "../screens/MapScreen";
 import MapView from "react-native-maps";
 
-const data1 = [
-  {
-    id: "123",
-    icon: "home",
-    location: "Home",
-    destination: "Roy Thomson Hall, ON",
-    latitude: "43.6466",
-    longitude: "-79.3864",
-  },
-  {
-    id: "456",
-    icon: "briefcase",
-    location: "Work",
-    destination: "Centennial College",
-    latitude: "43.7863",
-    longitude: "-79.2264",
-  },
-];
-
-function onError(error) {
-  console.error(error);
-}
-
 async function getFavourites(favesRetrieved) {
   var favsList;
-  var snapshot = await db
-    .collection(`users`)
-    .doc(`${await firebase.auth().currentUser.email}`)
-    //.doc("jb@mail.com")
-    .collection(`favourites`)
-    //.doc('KjVYAx27WOPN1Ke6ygCs')
-    .get();
+  return (
+    db
+      .collection(`users`)
+      .doc(`${await firebase.auth().currentUser.email}`)
+      //.doc("jb@mail.com")
+      .collection(`favourites`)
+      //.doc('KjVYAx27WOPN1Ke6ygCs')
+      .onSnapshot((snapshot) => {
+        favsList = [];
+        snapshot.forEach((doc) => {
+          const favItem = doc.data();
+          favsList.push({
+            address: doc.data().address,
+            location: doc.data().location,
+            name: doc.data().name,
+            docId: doc.id,
+          });
+        });
 
-  favsList = [];
-  snapshot.forEach((doc) => {
-    const favItem = doc.data();
-    favsList.push({
-      address: doc.data().address,
-      location: doc.data().location,
-      name: doc.data().name,
-      docId: doc.id,
-    });
-  });
+        favesRetrieved(favsList);
+      })
+  );
+
   //console.log(favsList);
-  favesRetrieved(favsList);
 }
 
 async function deleteFavourite(docId) {
@@ -77,30 +60,32 @@ async function deleteFavourite(docId) {
     });
 }
 
+LogBox.ignoreLogs(["VirtualizedLists should never be nested"]);
+
 const NavFavourites = () => {
   const [faves, setFaves] = useState([]);
   const navigation = useNavigation();
 
   useEffect(() => {
     try {
-      //const authUser = firebase.auth();
-      //getFavourites(setFaves);
-      const unsub = getFavourites(setFaves);
-      return () => {
-        unsub();
-      };
-      //console.log(result);
+      getFavourites(setFaves);
     } catch (error) {
       console.log(error.message);
     }
-    // setFaves(getFavorites());
   }, []);
 
   return (
-    <SafeAreaView>
+    <ScrollView
+      scrollEnabled={true}
+      nestedScrollEnabled={true}
+      style={tw`h-1/2`}
+    >
       <FlatList
+        scrollEnabled={true}
+        scrollToOverflowEnabled={true}
+        nestedScrollEnabled={true}
         data={faves}
-        keyExtractor={(item) => item.name}
+        keyExtractor={(item, index) => index}
         ItemSeparatorComponent={() => (
           <View style={[tw`bg-gray-200`, { height: 0.5 }]} />
         )}
@@ -110,6 +95,8 @@ const NavFavourites = () => {
             onPress={() => {
               navigation.navigate("MapScreen", {
                 location: location,
+                name: name,
+                address: address,
               });
             }}
           >
@@ -141,7 +128,7 @@ const NavFavourites = () => {
           </TouchableOpacity>
         )}
       />
-    </SafeAreaView>
+    </ScrollView>
   );
 };
 
