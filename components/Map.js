@@ -13,14 +13,14 @@ const Map = () => {
   const mapRef = useRef(null);
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    if (!origin || !destination) return;
+  // useEffect(() => {
+  //   if (!origin || !destination) return;
 
-    // Zoom & fit to markers
-    mapRef.current.fitToSuppliedMarkers(["origin", "destination"], {
-      edgePadding: { top: 50, right: 50, bottom: 50, left: 50 },
-    });
-  }, [origin, destination]);
+  //   // Zoom & fit to markers
+  // //   mapRef.current.fitToSuppliedMarkers(["origin", "destination"], {
+  // //     edgePadding: { top: 10, right: 10, bottom: 10, left: 10 },
+  // //   });
+  // // }, [origin, destination]);
 
   useEffect(() => {
     if (!origin || !destination) return;
@@ -52,6 +52,7 @@ const Map = () => {
     >
       {origin && destination && (
         <MapViewDirections 
+          lineDashPattern={[0]}
           origin={origin.description}
           destination={destination.description}
           apikey={GOOGLE_MAPS_APIKEY}

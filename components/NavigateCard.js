@@ -1,7 +1,8 @@
-import React from 'react'
+import React,{useEffect,useRef} from 'react'
 import { StyleSheet, Text, View , SafeAreaView, TouchableOpacity} from 'react-native'
 import tw from 'tailwind-react-native-classnames'
 import SafeViewAndroid from './SafeViewAndroid'
+import { selectDestination, selectOrigin, setTravelTimeInformation } from '../slices/navSlice'
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete'
 import { GOOGLE_MAPS_APIKEY } from '@env'
 import { useDispatch } from 'react-redux'
@@ -9,20 +10,29 @@ import { setDestination } from '../slices/navSlice'
 import { useNavigation } from '@react-navigation/core'
 import NavFavourites from './NavFavourites'
 import { Icon } from 'react-native-elements'
+import { useSelector } from 'react-redux'
+import { DatePickerIOS } from 'react-native'
 
 const NavigateCard = () => {
+  const origin = useSelector(selectOrigin);
   const dispatch = useDispatch();
   const navigation = useNavigation();
+  const ref = useRef();
 
+  useEffect(() => {
+    ref.current?.setAddressText('parking');
+  }, []);
   return (
     <SafeAreaView style={[ 
       tw`bg-white flex-1`
     ]}>
-      <Text style={tw`text-center py-5 text-xl`}>Good Morning, Sonny</Text>
+      <Text style={tw`text-center py-5 text-xl`}>Good Morning</Text>
       <View style={tw`border-t border-gray-200 flex-shrink`}>
         <View>
           <GooglePlacesAutocomplete 
-            placeholder="Where to?"
+         
+         
+            placeholder=""
             styles={toInputBoxStyles}
             fetchDetails={true}
             returnKeyType={"search"}
@@ -35,15 +45,22 @@ const NavigateCard = () => {
                 })
               );
 
-              navigation.navigate("RideOptionsCard");
+              // navigation.navigate("RideOptionsCard");
             }}
+            
             enablePoweredByContainer={false}
             query={{
               key: GOOGLE_MAPS_APIKEY,
               language: "en",
+              type:"establishment",
+              components: "country:can",
+              radius:5,
+              location: `${origin.location.lat}, ${origin.location.lng}`,
+              rankby:"distance"
             }}
             nearbyPlacesAPI="GooglePlacesSearch"
             debounce={400}
+            
           />
         </View>
         <NavFavourites /> 
@@ -56,7 +73,7 @@ const NavigateCard = () => {
           style={tw`flex flex-row justify-between bg-black w-24 px-4 py-3 rounded-full`}
         >
           <Icon name="car" type="font-awesome" color="white" size={16} />
-          <Text style={tw`text-white text-center`}>Rides</Text>
+          <Text style={tw`text-white text-center`}>Reserve Spot</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
@@ -68,7 +85,7 @@ const NavigateCard = () => {
             color="black"
             size={16}
           />
-          <Text style={tw`text-center`}>Eats</Text>
+          <Text style={tw`text-center`}>Add to favourites</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>

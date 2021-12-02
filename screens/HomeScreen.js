@@ -53,8 +53,8 @@ const HomeScreen = () => {
           />
         </TouchableOpacity>
 
-        {/* <GooglePlacesAutocomplete
-          placeholder="Where from?"
+        <GooglePlacesAutocomplete
+          placeholder="Current Location?"
           styles={{
             container: {
               flex: 0,
@@ -77,11 +77,12 @@ const HomeScreen = () => {
           minLength={2}
           query={{
             key: GOOGLE_MAPS_APIKEY,
-            language: "en"
+            language: "en",
+            components: "country:can"
           }}
           nearbyPlacesAPI="GooglePlacesSearch"
           debounce={400}
-        /> */}
+        />
 
         <NavOptions />
         <NavFavourites />
