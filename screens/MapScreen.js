@@ -1,114 +1,52 @@
-import * as React from "react";
-import MapView, { Callout, Circle, Marker } from "react-native-maps";
-import { StyleSheet, Text, View, Dimensions } from "react-native";
-import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
-import { useNavigation } from "@react-navigation/core";
+import { useNavigation } from '@react-navigation/core'
+import { createNativeStackNavigator } from '@react-navigation/native-stack'
+import React from 'react'
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Icon } from 'react-native-elements'
+import tw from 'tailwind-react-native-classnames'
+import Map from '../components/Map'
+import NavigateCard from '../components/NavigateCard'
+import RideOptionsCard from '../components/RideOptionsCard'
 
-export default function App(location) {
-  console.log("location = ", location);
-  const faveOrigin = {
-    latitude: location?.route?.params?.location?.latitude,
-    longitude: location?.route?.params?.location?.longitude,
-    latitudeDelta: 0.05,
-    longitudeDelta: 0.05,
-  };
+const MapScreen = () => {
+  const Stack = createNativeStackNavigator();
+  const navigation = useNavigation();
 
-  const [region, setRegion] = React.useState({
-    latitude: 43.7131722,
-    longitude: -79.2563805,
-    latitudeDelta: 0.0922,
-    longitudeDelta: 0.0421,
-  });
-
-  const [pin, setPin] = React.useState({
-    latitude:
-      location.route.params === undefined ? 43.7131722 : faveOrigin.latitude,
-    longitude:
-      location.route.params === undefined ? -79.2563805 : faveOrigin.longitude,
-  });
-  //console.log(faveOrigin?.location?.latitude, faveOrigin?.location?.longitude);
-  console.log(pin);
   return (
-    <View style={{ marginTop: 30, flex: 1 }}>
-      <GooglePlacesAutocomplete
-        placeholder="Search"
-        fetchDetails={true}
-        GooglePlacesSearchQuery={{
-          rankby: "distance",
-        }}
-        onPress={(data, details = null) => {
-          // 'details' is provided when fetchDetails = true
-          console.log(data, details);
-          setRegion({
-            latitude: details.geometry.location.lat,
-            longitude: details.geometry.location.lng,
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421,
-          });
-        }}
-        query={{
-          key: "AIzaSyBAlXtxufpgdyf5BRDa03tLUg-xhlt9NCw",
-          language: "en",
-          types: "establishment",
-          components: "country:can",
-          radius: 5,
-          location: `${region.latitude}, ${region.longitude}`,
-        }}
-        styles={{
-          container: {
-            flex: 0,
-            position: "relative",
-            width: "100%",
-            zIndex: 1,
-          },
-          listView: { backgroundColor: "white" },
-        }}
-      />
-      <MapView
-        style={styles.map}
-        // initialRegion={
-        //   location?.route?.params?.location?.latitude === null
-        //     ? region
-        //     : faveOrigin
-        // }
-        initialRegion={
-          location.route.params === undefined ? region : faveOrigin
-        }
-        provider="google"
-      >
-        <Marker
-          coordinate={pin}
-          pinColor="black"
-          draggable={true}
-          onDragStart={(e) => {
-            console.log("Drag start", e.nativeEvent.coordinate);
-          }}
-          onDragEnd={(e) => {
-            setPin({
-              latitude: e.nativeEvent.coordinate.latitude,
-              longitude: e.nativeEvent.coordinate.longitude,
-            });
-          }}
-        >
-          <Callout>
-            <Text>I'm here</Text>
-          </Callout>
-        </Marker>
-        <Circle center={pin} radius={1000} />
-      </MapView>
+    <View>
+
+      <TouchableOpacity 
+        onPress={() => navigation.navigate("HomeScreen")}
+        style={tw`bg-gray-100 absolute top-16 left-8 z-50 p-3 rounded-full shadow-lg`}>
+        <Icon name="menu" />
+      </TouchableOpacity>
+
+      <View style={tw`h-1/2`}>
+        <Map />
+      </View>
+      
+      <View style={tw`h-1/2`}>
+        <Stack.Navigator>
+          <Stack.Screen
+            name="NavigateCard"
+            component={NavigateCard}
+            options={{
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name="RideOptionsCard"
+            component={RideOptionsCard}
+            options={{
+              headerShown: false,
+            }}
+          />
+        </Stack.Navigator>
+      </View>
     </View>
-  );
+  )
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  map: {
-    width: Dimensions.get("window").width,
-    height: Dimensions.get("window").height,
-  },
-});
+export default MapScreen
+
+const styles = StyleSheet.create({})
