@@ -1,14 +1,20 @@
-import React, { useState } from 'react'
-import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import { SafeAreaView } from 'react-native-safe-area-context'
-import tw from 'tailwind-react-native-classnames'
-import SafeViewAndroid from './SafeViewAndroid'
-import { Icon, Image } from 'react-native-elements'
-import { useNavigation } from '@react-navigation/core'
-import { selectTravelTimeInformation } from '../slices/navSlice'
-import { useSelector } from 'react-redux'
-import 'intl'
-import 'intl/locale-data/jsonp/en-GB'
+import React, { useState } from "react";
+import {
+  FlatList,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import tw from "tailwind-react-native-classnames";
+import SafeViewAndroid from "./SafeViewAndroid";
+import { Icon, Image } from "react-native-elements";
+import { useNavigation } from "@react-navigation/core";
+import { selectTravelTimeInformation } from "../slices/navSlice";
+import { useSelector } from "react-redux";
+import "intl";
+import "intl/locale-data/jsonp/en-GB";
 
 const data = [
   {
@@ -27,7 +33,7 @@ const data = [
     id: "Uber-LUX-789",
     title: "Uber LUX",
     multiplier: 1.75,
-    image: "https://links.papareact.com/7pf"
+    image: "https://links.papareact.com/7pf",
   },
 ];
 
@@ -40,25 +46,31 @@ const RideOptionsCard = () => {
   const travelTimeInformation = useSelector(selectTravelTimeInformation);
 
   return (
-    <SafeAreaView style={[SafeViewAndroid.AndroidSafeAreaBottom, tw`bg-white flex-grow`]}>
+    <SafeAreaView
+      style={[SafeViewAndroid.AndroidSafeAreaBottom, tw`bg-white flex-grow`]}
+    >
       <View>
-        <TouchableOpacity 
-          onPress={() => navigation.navigate("NavigateCard")} 
+        <TouchableOpacity
+          onPress={() => navigation.navigate("NavigateCard")}
           style={tw`absolute top-3 left-5 z-50 p-3 rounded-full`}
         >
           <Icon name="chevron-left" type="fontawesome" />
         </TouchableOpacity>
-        <Text style={tw`text-center py-5 text-xl`}>Select a Ride - {travelTimeInformation?.distance?.text}</Text>
+        <Text style={tw`text-center py-5 text-xl`}>
+          Select a Ride - {travelTimeInformation?.distance?.text}
+        </Text>
       </View>
 
-      <FlatList 
-        data={data} 
+      <FlatList
+        data={data}
         keyExtractor={(item) => item.id}
         renderItem={({ item: { id, title, multiplier, image }, item }) => (
-          <TouchableOpacity 
+          <TouchableOpacity
             onPress={() => setSelected(item)}
-            style={tw`flex-row justify-between items-center px-10 ${id ===
-            selected?.id && 'bg-gray-200'}`}>
+            style={tw`flex-row justify-between items-center px-10 ${
+              id === selected?.id && "bg-gray-200"
+            }`}
+          >
             <Image
               style={{
                 width: 100,
@@ -67,34 +79,39 @@ const RideOptionsCard = () => {
               }}
               source={{ uri: image }}
             />
-          <View style={tw`-ml-6`}>
-            <Text style={tw`text-xl font-semibold`}>{title}</Text>
-            <Text>{travelTimeInformation?.duration?.text} Travel Time</Text>
-          </View>
-          <Text style={tw`text-xl`}>
-            
-            {new Intl.NumberFormat("en-GB", {
-              style: "currency",
-              currency: "GBP"
-            }).format(
-              (travelTimeInformation?.duration.value * SURGE_CHARGE_RATE
-                * multiplier) / 100
-            )}
-
-          </Text>
+            <View style={tw`-ml-6`}>
+              <Text style={tw`text-xl font-semibold`}>{title}</Text>
+              <Text>{travelTimeInformation?.duration?.text} Travel Time</Text>
+            </View>
+            <Text style={tw`text-xl`}>
+              {new Intl.NumberFormat("en-GB", {
+                style: "currency",
+                currency: "GBP",
+              }).format(
+                (travelTimeInformation?.duration.value *
+                  SURGE_CHARGE_RATE *
+                  multiplier) /
+                  100
+              )}
+            </Text>
           </TouchableOpacity>
-        )}        
+        )}
       />
-      
+
       <View style={tw`mt-auto border-t border-gray-200`}>
-        <TouchableOpacity disabled={!selected} style={tw`bg-black py-3 m-3 ${!selected && "bg-gray-300"}`}>
-          <Text style={tw`text-center text-white text-xl`}>Choose {selected?.title}</Text>
+        <TouchableOpacity
+          disabled={!selected}
+          style={tw`bg-black py-3 m-3 ${!selected && "bg-gray-300"}`}
+        >
+          <Text style={tw`text-center text-white text-xl`}>
+            Choose {selected?.title}
+          </Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
-  )
-}
+  );
+};
 
-export default RideOptionsCard
+export default RideOptionsCard;
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({});
