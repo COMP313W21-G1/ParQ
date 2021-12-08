@@ -76,6 +76,7 @@ const Map = () => {
       style={tw`flex-1`}
       mapType="standard"
       zoom="zoom"
+      center="center"
       initialRegion={{
         latitude: origin.location.lat,
         longitude: origin.location.lng,
