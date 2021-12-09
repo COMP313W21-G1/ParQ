@@ -21,7 +21,7 @@ import { useNavigation } from "@react-navigation/core";
 import NavFavourites from "./NavFavourites";
 import { Icon } from "react-native-elements";
 import { useSelector } from "react-redux";
-import { DatePickerIOS } from "react-native";
+import ResultsList from "./ResultsList";
 
 const NavigateCard = () => {
   const origin = useSelector(selectOrigin);
@@ -66,6 +66,7 @@ const NavigateCard = () => {
             debounce={400}
           />
         </View>
+        <ResultsList />
         {/* <NavFavourites /> */}
       </View>
       <View

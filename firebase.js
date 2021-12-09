@@ -86,6 +86,33 @@ export async function deleteBookedSpot(docId) {
     });
 }
 
+export async function getVendors(vendorsRetrieved) {
+  var vendorList;
+  return (
+    db
+      .collection(`parkingLots`)
+      //.doc("jb@mail.com")
+      //.doc('KjVYAx27WOPN1Ke6ygCs')
+      .onSnapshot((snapshot) => {
+        vendorList = [];
+        snapshot.forEach((doc) => {
+          //const favItem = doc.data();
+          //console.log(doc.data());
+          vendorList.push({
+            address: doc.data().parkingAddress,
+            latitude: doc.data().location.latitude,
+            longitude: doc.data().location.longitude,
+            name: doc.data().company,
+            feePerHour: doc.data().feePerHour,
+            docId: doc.id,
+          });
+        });
+        vendorsRetrieved(vendorList);
+        //console.log(vendorList);
+      })
+  );
+}
+
 export function convertDateTime(time) {
   if (typeof time !== "undefined") {
     const fireBaseTime = new Date(
