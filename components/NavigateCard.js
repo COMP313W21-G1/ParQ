@@ -54,6 +54,8 @@ const NavigateCard = () => {
                 setOrigin({
                   location: details.geometry.location,
                   description: data.description,
+                  name: details.name,
+                  address: details.formatted_address,
                 })
               );
               //navigation.navigate("MapScreen");

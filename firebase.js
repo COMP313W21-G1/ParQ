@@ -105,6 +105,7 @@ export async function getVendors(vendorsRetrieved) {
             name: doc.data().company,
             feePerHour: doc.data().feePerHour,
             docId: doc.id,
+            totalParkingSpots: doc.data.totalParkingSpots,
           });
         });
         vendorsRetrieved(vendorList);
@@ -112,6 +113,31 @@ export async function getVendors(vendorsRetrieved) {
       })
   );
 }
+
+// export async function getUser(userRetrieved) {
+//   var user;
+//   return db
+//     .collection(`users`)
+//     .where("owner_uid", "==", `${await firebase.auth().currentUser.uid}`)
+//     .onSnapshot((snapshot) => {
+//       snapshot.forEach((doc) => {
+//         //console.log(doc.data());
+//         user = {
+//           address: doc.data().address,
+//           email: doc.data().email,
+//           fist: doc.data().firstname,
+//           lastname: doc.data().lastname,
+//           feePerHour: doc.data().owner_uid,
+//           phone: doc.data().phone,
+//           type: doc.data().type,
+//           profile_picture: doc.data().profile_picture,
+//           owner_uid: doc.data().owner_uid,
+//         };
+//       });
+//       userRetrieved(user);
+//       //console.log(vendorList);
+//     });
+// }
 
 export function convertDateTime(time) {
   if (typeof time !== "undefined") {

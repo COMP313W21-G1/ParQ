@@ -29,17 +29,21 @@ const Map = () => {
     //   //if (!origin || !destination) return;
     const getApiResults = async () => {
       fetch(
-        `https://maps.googleapis.com/maps/api/place/nearbysearch/json?keyword=parking&location=${origin.location.lat}%2C${origin.location.lng}&radius=1500&key=${GOOGLE_MAPS_APIKEY}`
+        `https://maps.googleapis.com/maps/api/place/nearbysearch/json?keyword=parking&location=${origin.location.lat}%2C${origin.location.lng}&radius=750&key=${GOOGLE_MAPS_APIKEY}`
       )
         .then((res) => res.json())
         .then((data) => {
           let markers = [];
           data.results.forEach((element) => {
+            //console.log(element);
+            let rawDesc = [];
+            element.types.forEach((value) => rawDesc.push(value));
+            console.log(rawDesc);
             let result = {
-              latitude: element.geometry.location.lat,
-              longitude: element.geometry.location.lng,
+              location: element.geometry.location,
               name: element.name,
               address: element.vicinity,
+              description: rawDesc,
             };
             markers.push(result);
             //console.log(element.geometry.location.lat);
@@ -71,6 +75,7 @@ const Map = () => {
       style={tw`flex-1`}
       mapType="standard"
       zoom="zoom"
+      zoomControlEnabled={true}
       center="center"
       initialRegion={{
         latitude: origin.location.lat,
@@ -79,26 +84,37 @@ const Map = () => {
         longitudeDelta: 0.01,
       }}
     >
-      {/* <MapView.Circle
+      <MapView.Circle
         center={{
           latitude: origin.location.lat,
           longitude: origin.location.lng,
           latitudeDelta: 0.01,
           longitudeDelta: 0.01,
         }}
-        radius={300}
+        radius={1000}
         strokeWidth={1}
         strokeColor={"#1a66ff"}
         fillColor={"rgba(230,238,255,0.5)"}
-      /> */}
+      />
 
       {origin?.location && (
         <Marker
+          mapRef={mapRef}
           coordinate={{
             latitude: origin.location.lat,
             longitude: origin.location.lng,
           }}
           title="Origin"
+          onPress={() => {
+            let loc = {};
+            loc = { lat: origin.location.lat, lng: origin.location.lng };
+            navigation.navigate("ParkingDetailsCard", {
+              name: origin.name,
+              address: origin.address,
+              location: loc,
+              description: origin.description,
+            });
+          }}
           description={origin.description}
           identifier="origin"
           onCalloutPress={() => {
@@ -110,30 +126,34 @@ const Map = () => {
         //console.log(result);
         return (
           <Marker
+            mapRef={mapRef}
             key={index}
             coordinate={{
-              latitude: result.latitude,
-              longitude: result.longitude,
+              latitude: result.location.lat,
+              longitude: result.location.lng,
             }}
             title={result.name}
             description={result.address}
             onPress={() => {
+              let loc = {};
+              loc = { lat: result.location.lat, lng: result.location.lng };
               navigation.navigate("ParkingDetailsCard", {
                 name: result.name,
                 address: result.address,
-                latitude: result.latitude,
-                longitude: result.longitude,
+                location: loc,
+                description: result.description,
               });
             }}
           >
-            <Icon name="car" type="font-awesome" color="green" size={25} />
+            <Icon name="car" type="font-awesome" color="blue" size={25} />
           </Marker>
         );
       })}
       {vendors.map((result, index) => {
-        //console.log(result);
+        //console.log(result.totalParkingSpots);
         return (
           <Marker
+            mapRef={mapRef}
             key={index}
             image={require("../assets/logo.png")}
             style={{ maxWidth: 5 }}
@@ -142,40 +162,20 @@ const Map = () => {
               longitude: result.longitude,
             }}
             title={result.name}
-            description={`${result.address}\nRate: ${result.feePerHour}\n# Spots: ${result.totalParkingSpots}`}
+            description={`Rate: $${result.feePerHour}/Hr, #_of_Spots: ${result.totalParkingSpots}`}
             onPress={() => {
+              let loc = {};
+              loc = { lat: result.latitude, lng: result.longitude };
               navigation.navigate("ParkingDetailsCard", {
                 name: result.name,
                 address: result.address,
-                latitude: result.latitude,
-                longitude: result.longitude,
+                location: loc,
+                description: `Rate: $${result.feePerHour}/Hr\n# Spots: ${result.totalParkingSpots}`,
               });
             }}
           ></Marker>
         );
       })}
-
-      {/* {origin && destination && (
-        <MapViewDirections
-          lineDashPattern={[0]}
-          origin={origin.description}
-          destination={destination.description}
-          apikey={GOOGLE_MAPS_APIKEY}
-          strokeWidth={3}
-          strokeColor="black"
-        />
-      )} 
-       {destination?.location && (
-        <Marker
-          coordinate={{
-            latitude: destination.location.lat,
-            longitude: destination.location.lng,
-          }}
-          title="Destination"
-          description={destination.description}
-          identifier="destination"
-        />
-      )} */}
     </MapView>
   );
 };

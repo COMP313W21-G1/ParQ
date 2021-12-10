@@ -12,6 +12,7 @@ import SafeViewAndroid from "./SafeViewAndroid";
 import { Icon, Image } from "react-native-elements";
 import { useNavigation } from "@react-navigation/core";
 import { useSelector } from "react-redux";
+import { string } from "yup/lib/locale";
 
 const ParkingDetailsCard = (location) => {
   const navigation = useNavigation();
@@ -33,8 +34,16 @@ const ParkingDetailsCard = (location) => {
           <Text style={tw`text-center p-1 text-xl`}>
             Name: {location.route.params.name}
           </Text>
-          <Text style={tw`text-center p-1 text-xl`}>
+          <Text style={tw`text-center p-1 text-lg`}>
             Address: {location.route.params.address}
+          </Text>
+          <Text style={tw`text-center p-1 text-base`}>
+            Description(Array or Formatted String):{" "}
+            {`${location.route.params.description[0]}\n${location.route.params.description}`}
+          </Text>
+          <Text style={tw`text-center p-1 text-base`}>
+            Coordinates:
+            {` ${location.route.params.location.lat}, ${location.route.params.location.lng}`}
           </Text>
         </View>
       </View>
@@ -42,11 +51,19 @@ const ParkingDetailsCard = (location) => {
         style={tw`flex-row bg-white justify-evenly py-2 mt-auto border-t border-gray-100`}
       >
         <TouchableOpacity
-          onPress={() =>
+          onPress={() => {
+            let loc = {};
+            loc = {
+              lat: location.route.params.location.lat,
+              lng: location.route.params.location.lng,
+            };
             navigation.navigate("ReservationForm", {
-              parkingSpot: location.route.params,
-            })
-          }
+              name: location.route.params.name,
+              address: location.route.params.address,
+              location: loc,
+              description: location.route.params.description,
+            });
+          }}
           style={tw`flex flex-row justify-between bg-black w-36 px-4 py-3 rounded-full`}
         >
           <Icon name="car" type="font-awesome" color="white" size={16} />
@@ -54,11 +71,19 @@ const ParkingDetailsCard = (location) => {
         </TouchableOpacity>
 
         <TouchableOpacity
-          onPress={() =>
+          onPress={() => {
+            let loc = {};
+            loc = {
+              lat: location.route.params.location.lat,
+              lng: location.route.params.location.lng,
+            };
             navigation.navigate("FavouriteForm", {
-              parkingSpot: location.route.params,
-            })
-          }
+              name: location.route.params.name,
+              address: location.route.params.address,
+              location: loc,
+              description: location.route.params.description,
+            });
+          }}
           style={tw`flex flex-row justify-between w-36 px-1 py-1 rounded-full`}
         >
           <Icon name="favorite" type="MaterialIcons" color="red" size={16} />

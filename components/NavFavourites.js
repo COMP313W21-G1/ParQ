@@ -100,6 +100,8 @@ const NavFavourites = () => {
                 setOrigin({
                   location: loc,
                   description: name,
+                  name: name,
+                  address: address,
                 })
               );
               navigation.navigate("MapScreen");

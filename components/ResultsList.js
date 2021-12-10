@@ -72,7 +72,7 @@ const ResultsList = () => {
       temp.forEach((value) => {
         results.push(value);
       });
-      console.log(results);
+      //console.log(results);
     } catch (error) {
       console.log(error.message);
     }

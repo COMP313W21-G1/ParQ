@@ -30,11 +30,17 @@ const ReservationForm = (location) => {
           <Icon name="chevron-left" type="fontawesome" />
         </TouchableOpacity>
         <View style={tw`flex-col p-3 items-center  text-xl`}>
+          <Text style={tw`text-xl`}>Name: {location.route.params.name}</Text>
           <Text style={tw`text-xl`}>
-            Name: {location.route.params.parkingSpot.name}
+            Address: {location.route.params.address}
           </Text>
-          <Text style={tw`text-xl`}>
-            Address: {location.route.params.parkingSpot.address}
+          <Text style={tw`text-base`}>
+            Description(Array or Formatted String):{" "}
+            {`${location.route.params.description[0]}\n${location.route.params.description}`}
+          </Text>
+          <Text style={tw`text-base`}>
+            Coordinates:
+            {` ${location.route.params.location.lat}, ${location.route.params.location.lng}`}
           </Text>
         </View>
       </View>

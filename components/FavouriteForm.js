@@ -19,8 +19,12 @@ import { Formik } from "formik";
 import * as Yup from "yup";
 import { firebase, db } from "../firebase";
 
-async function addFavorites(loc, fave) {
-  //let location = [loc.latitude, loc.longitude];
+async function addFavorites(location) {
+  let loc = [];
+  loc = [
+    location.route.params.location.lat,
+    location.route.params.location.lng,
+  ];
   //console.log(loc);
   var snapshot = await db
     .collection(`users`)
@@ -29,9 +33,9 @@ async function addFavorites(loc, fave) {
     .collection(`favourites`)
     //.doc('KjVYAx27WOPN1Ke6ygCs')
     .add({
-      location: [loc.latitude, loc.longitude],
-      name: fave,
-      address: loc.address,
+      location: loc,
+      name: location.route.params.name,
+      address: location.route.params.address,
     })
     .then((result) => {
       //console.log(result);
@@ -61,9 +65,9 @@ const FavouriteForm = (location) => {
           <Icon name="chevron-left" type="fontawesome" />
         </TouchableOpacity>
         <Formik
-          initialValues={{ name: "" }}
+          initialValues={{ name: location.route.params.name }}
           onSubmit={(values) => {
-            addFavorites(location.route.params.parkingSpot, values.name);
+            addFavorites(location);
             navigation.goBack();
             //onLogin(values.email, values.password);
           }}
