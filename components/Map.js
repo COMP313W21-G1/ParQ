@@ -3,21 +3,15 @@ import { StyleSheet, Text, View, Image } from "react-native";
 import MapView, { Marker, Circle } from "react-native-maps";
 import { useDispatch, useSelector } from "react-redux";
 import tw from "tailwind-react-native-classnames";
-import {
-  selectFavorite,
-  //selectDestination,
-  selectOrigin,
-  setOrigin,
-  //setTravelTimeInformation,
-} from "../slices/navSlice";
+import { selectOrigin } from "../slices/navSlice";
 import { GOOGLE_MAPS_APIKEY } from "@env";
 import { Icon } from "react-native-elements/dist/icons/Icon";
 import { useNavigation } from "@react-navigation/core";
 import { firebase, db, getVendors } from "../firebase";
+import { setSpot } from "../slices/spotSlice";
 
 const Map = () => {
   const origin = useSelector(selectOrigin);
-  const fave = useSelector(selectFavorite);
   //const destination = useSelector(selectDestination);
   const [apiResults, setApiResults] = useState([]);
   const navigation = useNavigation();
@@ -38,7 +32,7 @@ const Map = () => {
             //console.log(element);
             let rawDesc = [];
             element.types.forEach((value) => rawDesc.push(value));
-            console.log(rawDesc);
+            //console.log(rawDesc);
             let result = {
               location: element.geometry.location,
               name: element.name,
@@ -108,11 +102,21 @@ const Map = () => {
           onPress={() => {
             let loc = {};
             loc = { lat: origin.location.lat, lng: origin.location.lng };
+            dispatch(
+              setSpot({
+                name: origin.name,
+                address: origin.address,
+                location: loc,
+                description: origin.description,
+                vendor: false,
+              })
+            );
             navigation.navigate("ParkingDetailsCard", {
               name: origin.name,
               address: origin.address,
               location: loc,
               description: origin.description,
+              vendor: false,
             });
           }}
           description={origin.description}
@@ -137,11 +141,21 @@ const Map = () => {
             onPress={() => {
               let loc = {};
               loc = { lat: result.location.lat, lng: result.location.lng };
+              dispatch(
+                setSpot({
+                  name: result.name,
+                  address: result.address,
+                  location: loc,
+                  description: result.description,
+                  vendor: false,
+                })
+              );
               navigation.navigate("ParkingDetailsCard", {
                 name: result.name,
                 address: result.address,
                 location: loc,
                 description: result.description,
+                vendor: false,
               });
             }}
           >
@@ -166,11 +180,21 @@ const Map = () => {
             onPress={() => {
               let loc = {};
               loc = { lat: result.latitude, lng: result.longitude };
+              dispatch(
+                setSpot({
+                  name: result.name,
+                  address: result.address,
+                  location: loc,
+                  description: `Rate= $${result.feePerHour}/Hr, # Spots= ${result.totalParkingSpots}`,
+                  vendor: true,
+                })
+              );
               navigation.navigate("ParkingDetailsCard", {
                 name: result.name,
                 address: result.address,
                 location: loc,
-                description: `Rate: $${result.feePerHour}/Hr\n# Spots: ${result.totalParkingSpots}`,
+                description: `Rate= $${result.feePerHour}/Hr, # Spots= ${result.totalParkingSpots}`,
+                vendor: true,
               });
             }}
           ></Marker>

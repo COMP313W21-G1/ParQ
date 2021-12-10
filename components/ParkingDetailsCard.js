@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   FlatList,
   StyleSheet,
@@ -11,12 +11,28 @@ import tw from "tailwind-react-native-classnames";
 import SafeViewAndroid from "./SafeViewAndroid";
 import { Icon, Image } from "react-native-elements";
 import { useNavigation } from "@react-navigation/core";
+import { firebase, db, getVendors } from "../firebase";
 import { useSelector } from "react-redux";
 import { string } from "yup/lib/locale";
+import { selectSpot, getSpot } from "../slices/spotSlice";
 
 const ParkingDetailsCard = (location) => {
   const navigation = useNavigation();
+  const [spot, setSpot] = useState([]);
+  const parking = useSelector(selectSpot);
+  const [vendors, setVendors] = useState([]);
   //console.log(location);
+  useEffect(() => {
+    try {
+      getVendors(setVendors);
+      console.log("1==>", parking);
+      console.log("2==>", spot);
+      getSpot(setSpot);
+      console.log("3==>", `${spot}`);
+    } catch (error) {
+      //
+    }
+  }, []);
 
   return (
     <SafeAreaView
@@ -48,9 +64,10 @@ const ParkingDetailsCard = (location) => {
         </View>
       </View>
       <View
-        style={tw`flex-row bg-white justify-evenly py-2 mt-auto border-t border-gray-100`}
+        style={tw`flex-row bg-white justify-between py-1 mt-auto border-t border-gray-100`}
       >
         <TouchableOpacity
+          disabled={location.route.params.vendor ? false : true}
           onPress={() => {
             let loc = {};
             loc = {
@@ -64,10 +81,23 @@ const ParkingDetailsCard = (location) => {
               description: location.route.params.description,
             });
           }}
-          style={tw`flex flex-row justify-between bg-black w-36 px-4 py-3 rounded-full`}
+          style={tw`flex-col justify-evenly w-36 h-12 m-1 rounded-full  ${
+            location.route.params.vendor ? "bg-gray-500" : "bg-gray-200"
+          } `}
         >
-          <Icon name="car" type="font-awesome" color="white" size={16} />
-          <Text style={tw`text-white text-center`}>Reserve Spot</Text>
+          <Icon
+            name="car"
+            type="font-awesome"
+            color={location.route.params.vendor ? "white" : "red"}
+            size={18}
+          />
+          <Text
+            style={tw`text-center  ${
+              location.route.params.vendor ? "text-white" : "text-black"
+            }`}
+          >
+            Reserve Spot
+          </Text>
         </TouchableOpacity>
 
         <TouchableOpacity
@@ -84,10 +114,10 @@ const ParkingDetailsCard = (location) => {
               description: location.route.params.description,
             });
           }}
-          style={tw`flex flex-row justify-between w-36 px-1 py-1 rounded-full`}
+          style={tw`flex justify-between w-36 h-12 m-1 rounded-full border-4 border-gray-500`}
         >
-          <Icon name="favorite" type="MaterialIcons" color="red" size={16} />
-          <Text style={tw`text-center`}>Add to favourites</Text>
+          <Text style={tw`text-center `}>Add to favourites</Text>
+          <Icon name="favorite" type="MaterialIcons" color="red" size={18} />
         </TouchableOpacity>
       </View>
     </SafeAreaView>

@@ -15,8 +15,6 @@ import { useSelector, useDispatch } from "react-redux";
 import { useNavigation } from "@react-navigation/core";
 import { firebase, db } from "../firebase";
 import { selectOrigin, setOrigin } from "../slices/navSlice";
-import { MapScreen } from "../screens/MapScreen";
-import MapView from "react-native-maps";
 
 async function getFavourites(favesRetrieved) {
   var favsList;
@@ -30,7 +28,6 @@ async function getFavourites(favesRetrieved) {
       .onSnapshot((snapshot) => {
         favsList = [];
         snapshot.forEach((doc) => {
-          const favItem = doc.data();
           favsList.push({
             address: doc.data().address,
             location: doc.data().location,
@@ -38,12 +35,9 @@ async function getFavourites(favesRetrieved) {
             docId: doc.id,
           });
         });
-
         favesRetrieved(favsList);
       })
   );
-
-  //console.log(favsList);
 }
 
 async function deleteFavourite(docId) {

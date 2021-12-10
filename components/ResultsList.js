@@ -108,22 +108,6 @@ const ResultsList = () => {
       )}
     />
   );
-  //   : (
-  //     // <FlatList
-  //     //   data={results}
-  //     //   keyExtractor={(item, index) => index}
-  //     //   renderItem={({ item: { address, name, company } }) => {
-  //     //     <ListItem name={name} address={address} company={company} />;
-  //     //   }}
-  //     // ></FlatList>
-  //     //if no spots are  booked, display a message
-  //     <View style={styles.textContainer}>
-  //       <Text style={styles.emptyTitle}>No Reservations Found! </Text>
-  //       <Text style={styles.emptySubtitle}>
-  //         Add a new reservation from the map screen
-  //       </Text>
-  //     </View>
-  //   );
 };
 const styles = StyleSheet.create({});
 export default ResultsList;

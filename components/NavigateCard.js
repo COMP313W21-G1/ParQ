@@ -7,18 +7,12 @@ import {
   TouchableOpacity,
 } from "react-native";
 import tw from "tailwind-react-native-classnames";
-import SafeViewAndroid from "./SafeViewAndroid";
-import {
-  selectDestination,
-  selectOrigin,
-  setTravelTimeInformation,
-} from "../slices/navSlice";
+import { selectOrigin } from "../slices/navSlice";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import { GOOGLE_MAPS_APIKEY } from "@env";
 import { useDispatch } from "react-redux";
 import { setOrigin } from "../slices/navSlice";
 import { useNavigation } from "@react-navigation/core";
-import NavFavourites from "./NavFavourites";
 import { Icon } from "react-native-elements";
 import { useSelector } from "react-redux";
 import ResultsList from "./ResultsList";
@@ -75,7 +69,6 @@ const NavigateCard = () => {
           />
         </View>
         <ResultsList />
-        {/* <NavFavourites /> */}
       </View>
     </SafeAreaView>
   );
