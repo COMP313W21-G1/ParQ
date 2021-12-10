@@ -82,9 +82,24 @@ const ResultsList = () => {
     <FlatList
       data={results}
       keyExtractor={(item, index) => index}
+      ItemSeparatorComponent={() => (
+        <View style={[tw`bg-gray-200`, { height: 0.5 }]} />
+      )}
       renderItem={({ item: { name, address, latitude, longitude } }) => (
-        <TouchableOpacity style={tw`flex-row items-center p-1`}>
-          <ListItem name={name} address={address} />
+        <TouchableOpacity
+          style={tw`flex-col items-center p-2 m-0`}
+          onPress={() => {
+            navigation.navigate("ParkingDetailsCard", {
+              name: name,
+              address: address,
+              latitude: latitude,
+              longitude: longitude,
+            });
+          }}
+        >
+          {/* <ListItem name={name} address={address} /> */}
+          <Text>{name}:</Text>
+          <Text> {address}</Text>
           {/* <View>
             <Text style={tw`font-semibold text-lg`}>{name}</Text>
             <Text style={tw`text-gray-500`}>{address}</Text>

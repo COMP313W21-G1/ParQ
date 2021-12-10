@@ -42,7 +42,7 @@ const HomeScreen = () => {
       <View style={tw`p-5`}>
         <TouchableOpacity
           onPress={handleSignout}
-          style={{ height: 150, width: 150, marginBottom: 20 }}
+          style={{ height: 120, width: 150 }}
         >
           <Image
             style={{
@@ -55,7 +55,7 @@ const HomeScreen = () => {
         </TouchableOpacity>
 
         <GooglePlacesAutocomplete
-          placeholder="Where from?"
+          placeholder="Park Where?"
           styles={{
             container: {
               flex: 0,
@@ -85,10 +85,9 @@ const HomeScreen = () => {
           nearbyPlacesAPI="GooglePlacesSearch"
           debounce={400}
         />
-
-        <NavOptions />
-        <NavFavourites style={tw`p-5`} />
+        <NavOptions style={tw``} />
       </View>
+      <NavFavourites style={tw`p-1`} />
     </SafeAreaView>
   );
 };

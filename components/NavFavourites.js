@@ -9,6 +9,7 @@ import {
   View,
 } from "react-native";
 import { Icon } from "react-native-elements";
+import { setFavorite } from "../slices/navSlice";
 import tw from "tailwind-react-native-classnames";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigation } from "@react-navigation/core";
@@ -64,6 +65,7 @@ LogBox.ignoreLogs(["VirtualizedLists should never be nested"]);
 const NavFavourites = () => {
   const [faves, setFaves] = useState([]);
   const navigation = useNavigation();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     try {
@@ -77,7 +79,7 @@ const NavFavourites = () => {
     <ScrollView
       scrollEnabled={true}
       nestedScrollEnabled={true}
-      style={tw`h-1/2`}
+      style={tw`h-1/3`}
     >
       <FlatList
         scrollEnabled={true}
@@ -92,11 +94,15 @@ const NavFavourites = () => {
           <TouchableOpacity
             style={tw`flex-1 flex-row p-3`}
             onPress={() => {
-              navigation.navigate("MapScreen", {
-                location: location,
-                name: name,
-                address: address,
-              });
+              let loc = {};
+              loc = { lat: location[0], lng: location[1] };
+              dispatch(
+                setOrigin({
+                  location: loc,
+                  description: name,
+                })
+              );
+              navigation.navigate("MapScreen");
             }}
           >
             <Icon

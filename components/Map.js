@@ -4,12 +4,12 @@ import MapView, { Marker, Circle } from "react-native-maps";
 import { useDispatch, useSelector } from "react-redux";
 import tw from "tailwind-react-native-classnames";
 import {
+  selectFavorite,
   //selectDestination,
   selectOrigin,
   setOrigin,
   //setTravelTimeInformation,
 } from "../slices/navSlice";
-import MapViewDirections from "react-native-maps-directions";
 import { GOOGLE_MAPS_APIKEY } from "@env";
 import { Icon } from "react-native-elements/dist/icons/Icon";
 import { useNavigation } from "@react-navigation/core";
@@ -17,28 +17,16 @@ import { firebase, db, getVendors } from "../firebase";
 
 const Map = () => {
   const origin = useSelector(selectOrigin);
+  const fave = useSelector(selectFavorite);
   //const destination = useSelector(selectDestination);
   const [apiResults, setApiResults] = useState([]);
   const navigation = useNavigation();
   const mapRef = useRef(null);
   const dispatch = useDispatch();
   const [vendors, setVendors] = useState([]);
-  // const tempResults = async () => {
-  //   fetch(
-  //     `https://maps.googleapis.com/maps/api/place/nearbysearch/json
-  //   ?keyword=parking
-  //   &location=-33.8670522%2C151.1957362
-  //   &radius=1000
-  //   &key=${GOOGLE_MAPS_APIKEY}`
-  //   ).then(async (res) => {
-  //     console.log(await res.json());
-  //   });
-  // };
-  //console.log(tempResults);
 
   useEffect(() => {
     //   //if (!origin || !destination) return;
-    if (!origin) return;
     const getApiResults = async () => {
       fetch(
         `https://maps.googleapis.com/maps/api/place/nearbysearch/json?keyword=parking&location=${origin.location.lat}%2C${origin.location.lng}&radius=1500&key=${GOOGLE_MAPS_APIKEY}`
@@ -62,16 +50,12 @@ const Map = () => {
         });
     };
     getApiResults();
-  }, [origin, GOOGLE_MAPS_APIKEY]);
-
-  useEffect(() => {
-    if (!origin) return;
     //Zoom & fit to markers
     mapRef.current.fitToSuppliedMarkers(["origin"], {
       edgePadding: { top: 5, right: 5, bottom: 5, left: 5 },
       animated: true,
     });
-  }, [origin]);
+  }, [origin, GOOGLE_MAPS_APIKEY]);
 
   useEffect(() => {
     try {
@@ -95,7 +79,7 @@ const Map = () => {
         longitudeDelta: 0.01,
       }}
     >
-      <MapView.Circle
+      {/* <MapView.Circle
         center={{
           latitude: origin.location.lat,
           longitude: origin.location.lng,
@@ -106,7 +90,7 @@ const Map = () => {
         strokeWidth={1}
         strokeColor={"#1a66ff"}
         fillColor={"rgba(230,238,255,0.5)"}
-      />
+      /> */}
 
       {origin?.location && (
         <Marker
@@ -118,11 +102,7 @@ const Map = () => {
           description={origin.description}
           identifier="origin"
           onCalloutPress={() => {
-            //
-          }}
-          onPress={(markerPress, id) => {
-            //console.log(id);
-            //console.log(markerPress);
+            return;
           }}
         />
       )}
@@ -138,11 +118,11 @@ const Map = () => {
             title={result.name}
             description={result.address}
             onPress={() => {
-              navigation.navigate("NavigateCard", {
-                latitude: result.latitude,
-                longitude: result.longitude,
+              navigation.navigate("ParkingDetailsCard", {
                 name: result.name,
                 address: result.address,
+                latitude: result.latitude,
+                longitude: result.longitude,
               });
             }}
           >
@@ -161,15 +141,15 @@ const Map = () => {
               latitude: result.latitude,
               longitude: result.longitude,
             }}
-            title={result.company}
+            title={result.name}
             description={`${result.address}\nRate: ${result.feePerHour}\n# Spots: ${result.totalParkingSpots}`}
             onPress={() => {
-              // navigation.navigate("NavigateCard", {
-              //   latitude: result.latitude,
-              //   longitude: result.longitude,
-              //   name: result.name,
-              //   address: result.address,
-              // });
+              navigation.navigate("ParkingDetailsCard", {
+                name: result.name,
+                address: result.address,
+                latitude: result.latitude,
+                longitude: result.longitude,
+              });
             }}
           ></Marker>
         );

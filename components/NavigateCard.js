@@ -34,6 +34,12 @@ const NavigateCard = () => {
   }, []);
   return (
     <SafeAreaView style={[tw`bg-white flex-1`]}>
+      <TouchableOpacity
+        onPress={() => navigation.goBack()}
+        style={tw`absolute top-3 left-5 z-50 p-3 rounded-full`}
+      >
+        <Icon name="chevron-left" type="fontawesome" />
+      </TouchableOpacity>
       <Text style={tw`text-center py-5 text-xl`}>Good Morning</Text>
       <View style={tw`border-t border-gray-200 flex-shrink`}>
         <View>
@@ -68,24 +74,6 @@ const NavigateCard = () => {
         </View>
         <ResultsList />
         {/* <NavFavourites /> */}
-      </View>
-      <View
-        style={tw`flex-row bg-white justify-evenly py-2 mt-auto border-t border-gray-100`}
-      >
-        <TouchableOpacity
-          onPress={() => navigation.navigate("RideOptionsCard")}
-          style={tw`flex flex-row justify-between bg-black w-36 px-4 py-3 rounded-full`}
-        >
-          <Icon name="car" type="font-awesome" color="white" size={16} />
-          <Text style={tw`text-white text-center`}>Reserve Spot</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={tw`flex flex-row justify-between w-36 px-1 py-1 rounded-full`}
-        >
-          <Icon name="favorite" type="MaterialIcons" color="red" size={16} />
-          <Text style={tw`text-center`}>Add to favourites</Text>
-        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );

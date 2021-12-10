@@ -7,6 +7,9 @@ import tw from "tailwind-react-native-classnames";
 import Map from "../components/Map";
 import NavigateCard from "../components/NavigateCard";
 import RideOptionsCard from "../components/RideOptionsCard";
+import ParkingDetailsCard from "../components/ParkingDetailsCard";
+import ReservationForm from "../components/ReservationForm";
+import FavouriteForm from "../components/FavouriteForm";
 
 const MapScreen = () => {
   const Stack = createNativeStackNavigator();
@@ -37,6 +40,27 @@ const MapScreen = () => {
           <Stack.Screen
             name="RideOptionsCard"
             component={RideOptionsCard}
+            options={{
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name="ParkingDetailsCard"
+            component={ParkingDetailsCard}
+            options={{
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name="ReservationForm"
+            component={ReservationForm}
+            options={{
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name="FavouriteForm"
+            component={FavouriteForm}
             options={{
               headerShown: false,
             }}
