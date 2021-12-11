@@ -105,7 +105,7 @@ export async function getVendors(vendorsRetrieved) {
             name: doc.data().company,
             feePerHour: doc.data().feePerHour,
             docId: doc.id,
-            totalParkingSpots: doc.data.totalParkingSpots,
+            totalParkingSpots: doc.data().totalParkingSpots,
           });
         });
         vendorsRetrieved(vendorList);

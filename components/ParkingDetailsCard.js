@@ -55,7 +55,9 @@ const ParkingDetailsCard = (location) => {
           </Text>
           <Text style={tw`text-center p-1 text-base`}>
             Description(Array or Formatted String):{" "}
-            {`${location.route.params.description[0]}\n${location.route.params.description}`}
+            {`${location.route.params.vendor} ? ${
+              location.route.params.description
+            }:${JSON.stringify(location?.route.params?.description)}`}
           </Text>
           <Text style={tw`text-center p-1 text-base`}>
             Coordinates:

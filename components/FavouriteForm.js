@@ -59,7 +59,7 @@ const FavouriteForm = (location) => {
       <View>
         <Text style={tw`text-2xl text-center font-bold`}>Favourite Form</Text>
         <TouchableOpacity
-          onPress={() => navigation.goBack()}
+          onPress={() => navigation.goBack(location)}
           style={tw`absolute top-3 left-5 z-50 p-3 rounded-full`}
         >
           <Icon name="chevron-left" type="fontawesome" />
@@ -68,7 +68,7 @@ const FavouriteForm = (location) => {
           initialValues={{ name: location.route.params.name }}
           onSubmit={(values) => {
             addFavorites(location);
-            navigation.goBack();
+            navigation.goBack(location);
             //onLogin(values.email, values.password);
           }}
           validationSchema={FavoriteFormSchema}
@@ -92,6 +92,7 @@ const FavouriteForm = (location) => {
                   placeholder="name"
                   autoCapitalize="none"
                   autoFocus={true}
+                  textAlign="center"
                   onChangeText={handleChange("name")}
                   onBlur={handleBlur("name")}
                   value={values.name}
@@ -100,7 +101,7 @@ const FavouriteForm = (location) => {
 
               <Pressable
                 titleSize={20}
-                style={styles.button(isValid)}
+                style={tw`bg-red-100 w-1/4 m-auto rounded-full rounded-3xl p-3 border-2 border-gray-300`}
                 onPress={handleSubmit}
                 disabled={!isValid}
               >
@@ -110,7 +111,7 @@ const FavouriteForm = (location) => {
                   name="favorite"
                   type="MaterialIcons"
                   color="red"
-                  size={36}
+                  size={48}
                 />
               </Pressable>
             </>

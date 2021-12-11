@@ -94,7 +94,7 @@ const HomeScreen = () => {
                     location: loc,
                     description: "Current Location",
                     name: "Current Location",
-                    address: null,
+                    address: "",
                   })
                 );
                 navigation.navigate("MapScreen");
