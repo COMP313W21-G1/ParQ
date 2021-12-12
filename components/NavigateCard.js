@@ -58,7 +58,7 @@ const NavigateCard = () => {
             query={{
               key: GOOGLE_MAPS_APIKEY,
               language: "en",
-              type: "establishment",
+              //type: "establishment",
               components: "country:can",
               radius: 5,
               location: `${origin.location.lat}, ${origin.location.lng}`,
