@@ -68,7 +68,7 @@ const LoginForm = () => {
             >
               <TextInput
                 placeholderTextColor="#444"
-                placeholder="Email"
+                placeholder="Phone number, username or email"
                 autoCapitalize="none"
                 keyboardType="email-address"
                 textContentType="emailAddress"
@@ -93,6 +93,9 @@ const LoginForm = () => {
                 onBlur={handleBlur("password")}
                 value={values.password}
               />
+            </View>
+            <View style={{ flexDirection: "row", justifyContent: 'space-between', marginBottom: 30 }}>
+              <Text style={{ color: "#6BB0F5", fontSize: 12 }}>Forgot password?</Text>
             </View>
 
             <Pressable
