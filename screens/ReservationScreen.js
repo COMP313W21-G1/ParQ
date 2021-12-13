@@ -138,7 +138,7 @@ import {  getReservations, convertDateTime } from '../firebase';
 
 
 
-export default function List(props) {
+export default function ReservationScreen(props) {
   const [items, setItems] = useState([]);
 
   useEffect(() => {
@@ -147,7 +147,14 @@ export default function List(props) {
 
   return (
     <View style={styles.container}>
-      {items.length > 0 ? <ItemList items={items} nav={props.navigation}/> : <Text>No items</Text>}
+      {items.length > 0 ? <ItemList items={items} nav={props.navigation}/> 
+          :
+          //if no spots are  booked, display a message
+          <View style={styles.textContainer}>
+            <Text style={styles.emptyTitle}>No Reservations Found! </Text>
+            <Text style={styles.emptySubtitle}>Add a new reservation from the map screen</Text>     
+          </View>
+      }
     </View>
   );
 }
