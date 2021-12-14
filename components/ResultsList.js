@@ -83,7 +83,7 @@ const ResultsList = () => {
     } catch (error) {
       console.log(error.message);
     }
-  }, []);
+  }, [apiResults, vendors]);
 
   return (
     <FlatList
