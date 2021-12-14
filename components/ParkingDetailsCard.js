@@ -25,10 +25,7 @@ const ParkingDetailsCard = (location) => {
   useEffect(() => {
     try {
       getVendors(setVendors);
-      console.log("1==>", parking);
-      console.log("2==>", spot);
       getSpot(setSpot);
-      console.log("3==>", `${spot}`);
     } catch (error) {
       //
     }

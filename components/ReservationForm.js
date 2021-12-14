@@ -43,6 +43,7 @@ const ReservationForm = (location) => {
             {` ${location.route.params.location.lat}, ${location.route.params.location.lng}`}
           </Text>
         </View>
+        
       </View>
     </SafeAreaView>
   );
