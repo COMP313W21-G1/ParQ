@@ -40,7 +40,7 @@ const ReservationDetailScreen = (props) => {
                   deleteReservation(reservationItem.id);              
                  
                   console.log('delete');
-                  props.navigation.navigate('ReservationScreen', true);
+                  props.navigation.navigate('ReservationScreen');
                 }}
             />
         </View>

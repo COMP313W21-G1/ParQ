@@ -1,81 +1,4 @@
 
-/** 
-
-import { StyleSheet, Button, Text, View, SafeAreaView, Image, TouchableWithoutFeedback, FlatList, StatusBar } from 'react-native'
-
-import React, {   useEffect, useState} from 'react';
-
-import tw from 'tailwind-react-native-classnames';
-
-import { convertDateTime, getReservations } from "../firebase";
-
-
-
-
-const ModifyReservationScreen = (props) => {
-    const { reservationItem } = props.route.params;
-  
-    return (
-   
-      //display the reservation details
-      //add buttons to edit the spot, start and end time or cancel the reservation
-      //to edit the start and end time make sure you check if the spot, lot, date and time is already reerved
-
-      <SafeAreaView style={styles.container}>                  
-        <View style={styles.textContainer}>
-            <Text style={styles.emptyTitle}>Modify Reservation </Text>   
-            <Text style={tw`font-semibold text-lg`}>Spot Id: {reservationItem.parkingSpotId}</Text>
-            <Text style={tw`text-gray-500`}>Start Time: {convertDateTime(reservationItem.start)}</Text>
-            <Text style={tw`text-gray-500`}>End time: {convertDateTime(reservationItem.end)}</Text>
-            <Text style={tw`text-gray-500`}>Address: {reservationItem.spotInfo.parkingAddress}</Text>
-            <Text style={tw`text-gray-500`}>Type: {reservationItem.spotInfo.parkingSpots.type}</Text>
-            <Text style={tw`text-gray-500`}>Cost: ${reservationItem.spotInfo.feePerHour}</Text>
-
-            <Button
-              title="Submit"
-              onPress={() => console.log('submitted')}
-            />
-        </View>
-      </SafeAreaView>
-     
-    )}
-  
-
-    const styles = StyleSheet.create({
-        container: {
-          flex: 1,
-          backgroundColor: '#ADD8E6',
-          paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
-        },
-        listItem: {
-          marginTop: 8,
-          marginBottom: 8
-        },
-        textContainer: {
-          flex: 1,
-          justifyContent: 'center',
-          alignItems: 'center',
-        },
-        titleStyle: {
-          fontSize: 30
-        },
-        subtitleStyle: {
-          fontSize: 18
-        },
-        emptyTitle: {
-          fontSize: 32,
-          marginBottom: 16
-        },
-        emptySubtitle: {
-          fontSize: 18,
-          fontStyle: 'italic'
-        }
-        })
-
-  
-  export default ModifyReservationScreen;
-  */
-
   import React, { useState, useEffect } from 'react';
   //import DropDownPicker from 'react-native-dropdown-picker';
   import SelectDropdown from 'react-native-select-dropdown'
@@ -118,9 +41,9 @@ const ModifyReservationScreen = (props) => {
       setEnd(endTxt);
     }
   
-    function handleSubmit() {
-        console.log('submit button pressed...');
-      setRes({ 
+    async function handleSubmit() {
+      console.log('submit button pressed...');
+       setRes({ 
           id: reservationItem.id,
           end: getTimeStamp(end),
           owner_uid: reservationItem.owner_uid, 
@@ -129,10 +52,10 @@ const ModifyReservationScreen = (props) => {
           start: getTimeStamp(start),
       }); 
       try{
-          modifyReservation(res, setupdateStatus);
+          await modifyReservation(res, setupdateStatus);
           
-          //setupdateStatus('Updatek');
-          Alert.alert(updateStatus);
+          //Alert.alert( await updateStatus);
+          //props.navigation.navigate('ReservationScreen');
       }
       catch (e){
         Alert.alert('Something went wrong');
@@ -221,15 +144,20 @@ const ModifyReservationScreen = (props) => {
       </View>
 
       <View> 
-             <Text>Spot</Text>          
+             <Text>Current Parking Spot</Text>          
 
-                
+             <TextInput
+                autoFocus={true}
+                style={styles.itemInput}  
+                editable = {false}
+                value={reservationItem.parkingSpotId} 
+                />
                 <SelectDropdown 
                     //style={styles.viewStyle}
                     style={styles.dropdown}
                     containerStyle={styles.shadow}
                     data={spotsList}
-                    defaultButtonText={'Select a spot'}
+                    defaultButtonText={'Select a different spot'}
                     defaultValue={spotsSelected}
                     onSelect={(selectedItem, index) => { 
                         console.log(selectedItem, index)

@@ -7,6 +7,10 @@
 // we instead use firebase@8.2.3
 import firebase from "firebase";
 
+import {
+  Alert,
+} from 'react-native'
+
 // Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyBcyN96SIznchdstM6WPHanTz4LcTSPBes",
@@ -146,7 +150,7 @@ export async function getReservations( spotsRetreived ){
               spotInfo: LotInfo,
             });  
 
-            console.log(reservationsList[0]);
+            //console.log(reservationsList[0]);
             spotsRetreived(reservationsList);
 
           }});
@@ -167,7 +171,7 @@ export async function getReservations( spotsRetreived ){
     "start": startTimestamp,
   }
   
-  addReservation(resItem); 
+  //addReservation(resItem); 
   
 }
 
@@ -226,13 +230,13 @@ export async function addReservation(reservationItem){
         var isBetweenEndB = false;
   
         isBetweenStartA = ( new Date(convertDateTime(reservationItem.start)) >= new Date(convertDateTime(doc.data().start)) && 
-                                new Date(convertDateTime(reservationItem.start)) <= new Date(convertDateTime(doc.data().end)) );
+                            new Date(convertDateTime(reservationItem.start)) <= new Date(convertDateTime(doc.data().end)) );
         isBetweenEndA = (new Date(convertDateTime(reservationItem.end)) >= new Date(convertDateTime(doc.data().start)) &&
-                            new Date(convertDateTime(reservationItem.end)) <= new Date(convertDateTime(doc.data().end)));
+                         new Date(convertDateTime(reservationItem.end)) <= new Date(convertDateTime(doc.data().end)));
         isBetweenStartB = (new Date( convertDateTime(doc.data().start) >= new Date(convertDateTime(reservationItem.start))) &&
-                              new Date(convertDateTime(doc.data().start)) <= new Date(convertDateTime(reservationItem.end)) );
+                           new Date(convertDateTime(doc.data().start)) <= new Date(convertDateTime(reservationItem.end)) );
         isBetweenEndB = ( new Date(convertDateTime(doc.data().end)) >= new Date(convertDateTime(reservationItem.start)) && 
-                              new Date(convertDateTime(doc.data().end))  <= new Date(convertDateTime(reservationItem.end))) ;
+                          new Date(convertDateTime(doc.data().end))  <= new Date(convertDateTime(reservationItem.end))) ;
   
        if(
           reservationItem.parkingLotId === doc.data().parkingLotId &&
@@ -272,12 +276,11 @@ export async function addReservation(reservationItem){
     } else{
       console.log("start time is greater than ending time")
     }
-
 }
 
 export async function getParkingSpots(reservationItem, setSpotsList){
   var allSpots = [];
-  var allSpotIds =[];
+  var allSpotIds = [];
   var docRef =  await db.collection("parkingLots")
   .doc(`${reservationItem.parkingLotId}`)
   .collection('parkingSpots').get();
@@ -304,16 +307,15 @@ export async function modifyReservation(reservationItem, setupdateStatus){
   // Set a new document in collection "reservations"
   if (new Date(convertDateTime(reservationItem.end)) > new Date(convertDateTime(reservationItem.start)) )  {
     console.log("Begin modifications ");
-    var updateStatus = 'NO UPDATE';
+   
     var spotAvailable = true;
 
-
+    var updateStatus = 'NO UPDATE';
     var snapshot = await 
       db.collection(`reservations`)
-      //.where(`${doc.id}`, "!=", `${reservationItem.id}`)
       .get();
     snapshot.forEach((doc) => {
-
+      updateStatus = '';
      if(doc.id != reservationItem.id ){
       var isBetweenStartA = false;
       var isBetweenEndA = false;
@@ -337,7 +339,7 @@ export async function modifyReservation(reservationItem, setupdateStatus){
 */ 
       
          
-          console.log(`${doc.id} != ${reservationItem.id}: `, reservationItem.id != doc.id);
+          //console.log(`${doc.id} != ${reservationItem.id}: `, reservationItem.id != doc.id);
           //console.log("Begin modifications - Entered for each ");
           if(
             reservationItem.parkingLotId === doc.data().parkingLotId &&
@@ -348,6 +350,7 @@ export async function modifyReservation(reservationItem, setupdateStatus){
           
               console.log("Spot taken for that time -- no modifications ");
               updateStatus = "Spot taken for that time -- no modifications";
+              Alert.alert(updateStatus);
               setupdateStatus(updateStatus);
               
               spotAvailable = false;
@@ -356,34 +359,31 @@ export async function modifyReservation(reservationItem, setupdateStatus){
         };      
     });
 
-    if (  //start is greater than or equal to current date time
-          (new Date(convertDateTime(reservationItem.start)) >= new Date() ) 
-          && spotAvailable ){
-      db.collection("reservations").doc(reservationItem.id).set({
-      //id: reservationItem.id,
-      end: reservationItem.end,
-      owner_uid: firebase.auth().currentUser.uid,
-      parkingLotId: reservationItem.parkingLotId, 
-      parkingSpotId: reservationItem.parkingSpotId, 
-      start: reservationItem.start,
-    })
-    .then(() => {
-      console.log("Document successfully modified!"); 
-      updateStatus = 'Document successfully modified';
-      setupdateStatus(updateStatus);
-    })
-    .catch((error) => {
-      console.error("Error writing document: ", error);
-    });}else{
-          updateStatus = 'Document was not modified';
-          setupdateStatus(updateStatus);
+    var updateSnapshot;
+      if (  //start is greater than or equal to current date time
+            (new Date(convertDateTime(reservationItem.start)) >= new Date() ) 
+            && spotAvailable ){
+
+       updateSnapshot = await db.collection("reservations").doc(reservationItem.id).update({
+        //id: reservationItem.id,
+        end: reservationItem.end,
+        owner_uid: firebase.auth().currentUser.uid,
+        parkingLotId: reservationItem.parkingLotId, 
+        parkingSpotId: reservationItem.parkingSpotId, 
+        start: reservationItem.start,
+      }).then(() => {
+        console.log(`Reservation with id ${reservationItem.id} successfully modified`); 
+        updateStatus = `Reservation Success: ${reservationItem.id}`;
+        Alert.alert(updateStatus);
+        setupdateStatus(updateStatus);
+      })
+      .catch((error) => {
+        console.error("Error writing document: ", error);
+      });}else{
+            updateStatus = 'Document was not modified';
+            setupdateStatus(updateStatus);
+      }
     }
-    }
-
-
-
-
-    
   } 
 
 export function deleteReservation(reservationId){

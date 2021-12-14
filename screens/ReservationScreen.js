@@ -10,13 +10,14 @@ import { useIsFocused } from '@react-navigation/native';
 
 const ReservationItem = ({ reservationItem , nav}) => (
     <View> 
-      {console.log(convertDateTime(reservationItem.end))}
+      {/*console.log(convertDateTime(reservationItem.end))*/}
         <View style={tw`flex-row`}>
           <View style={tw`justify-start`}>
             <Text style={tw`text-blue-600`}>Res ID: {reservationItem.id}</Text>
             <Text style={styles.textContainer}>Start Time: {`${convertDateTime(reservationItem.start)}`}</Text>
             <Text style={styles.textContainer}>End Time: {`${convertDateTime(reservationItem.end)}`}</Text>
             <Text style={tw`text-gray-500`}>Address: {reservationItem.spotInfo.parkingAddress}</Text>
+            <Text style={tw`text-gray-500`}>Parking Spot: {reservationItem.spotInfo.parkingSpots.id}</Text>
           </View>  
           <View>
             <Button
@@ -78,7 +79,7 @@ const ReservationScreen = ( props) => {
          renderItem={({ item ,})  => (
           <>
           {
-            console.log(item.id)
+            //console.log(item.id)
           } 
             <ReservationItem    
               //extraData={props.update}                     
