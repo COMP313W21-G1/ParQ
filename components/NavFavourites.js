@@ -15,6 +15,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useNavigation } from "@react-navigation/core";
 import { firebase, db } from "../firebase";
 import { selectOrigin, setOrigin } from "../slices/navSlice";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 async function getFavourites(favesRetrieved) {
   var favsList;
@@ -70,11 +71,7 @@ const NavFavourites = () => {
   }, []);
 
   return (
-    <ScrollView
-      scrollEnabled={true}
-      nestedScrollEnabled={true}
-      style={tw`h-1/3`}
-    >
+    <SafeAreaView nestedScrollEnabled={true} style={tw``}>
       <FlatList
         scrollEnabled={true}
         scrollToOverflowEnabled={true}
@@ -86,7 +83,7 @@ const NavFavourites = () => {
         )}
         renderItem={({ item: { location, name, address, docId } }) => (
           <TouchableOpacity
-            style={tw`flex-1 flex-row p-3`}
+            style={tw`flex-row px-3 py-2`}
             onPress={() => {
               let loc = {};
               loc = { lat: location[0], lng: location[1] };
@@ -108,7 +105,7 @@ const NavFavourites = () => {
               color="black"
               size={18}
             />
-            <View style={tw`mr-5 flex-auto items-stretch self-stretch`}>
+            <View style={tw`mr-5 ml-2 flex-auto items-stretch self-stretch`}>
               <Text style={tw`font-semibold text-lg`}>{name}</Text>
               <Text style={tw`text-gray-500`}>{address}</Text>
             </View>
@@ -129,7 +126,7 @@ const NavFavourites = () => {
           </TouchableOpacity>
         )}
       />
-    </ScrollView>
+    </SafeAreaView>
   );
 };
 

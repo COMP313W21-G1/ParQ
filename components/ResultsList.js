@@ -66,7 +66,7 @@ const ResultsList = () => {
         });
     };
     getApiResults();
-  }, [origin, GOOGLE_MAPS_APIKEY]);
+  }, [apiResults, vendors]);
 
   useEffect(() => {
     try {
@@ -90,7 +90,7 @@ const ResultsList = () => {
       data={results}
       keyExtractor={(item, index) => index}
       ItemSeparatorComponent={() => (
-        <View style={[tw`bg-gray-200`, { height: 0.5 }]} />
+        <View style={[tw`bg-gray-200 `, { height: 2 }]} />
       )}
       renderItem={({ item: { name, address, location, description } }) => (
         <TouchableOpacity

@@ -20,8 +20,6 @@ import { useDispatch } from "react-redux";
 import { setOrigin } from "../slices/navSlice";
 import NavFavourites from "../components/NavFavourites";
 import { firebase } from "../firebase";
-// keyboard avoiding view
-import KeyboardAvoidingWrapper from "./../components/KeyboardAvoidingWrapper";
 import * as Location from "expo-location";
 
 const HomeScreen = () => {
@@ -66,11 +64,11 @@ const HomeScreen = () => {
     <SafeAreaView
       style={[SafeViewAndroid.AndroidSafeAreaTop, tw`bg-white h-full`]}
     >
-      <View style={tw`p-5`}>
-        <View style={tw`flex-row justify-between`}>
+      <View style={tw`px-2 flex flex-col justify-start`}>
+        <View style={tw`flex-row justify-between px-1`}>
           <TouchableOpacity
-            onPress={handleSignout}
-            style={{ height: 120, width: 150 }}
+            disabled
+            style={[{ height: 120, width: 150 }, tw``]}
           >
             <Image
               style={{
@@ -82,7 +80,7 @@ const HomeScreen = () => {
             />
           </TouchableOpacity>
           <TouchableOpacity
-            disabled={!location ? true : false}
+            disabled={!location}
             onPress={() => {
               if (!location) {
                 return;
@@ -103,7 +101,7 @@ const HomeScreen = () => {
             }}
           >
             <Icon
-              style={tw`m-5 rounded-full bg-gray-300 p-2 mt-16`}
+              style={tw`m-5 rounded-full bg-gray-300 p-3 mt-12`}
               name="near-me"
               type="MaterialIcons"
               color="black"
@@ -113,13 +111,16 @@ const HomeScreen = () => {
         </View>
         <View>
           <GooglePlacesAutocomplete
-            placeholder="Park Where?"
+            placeholder="Get Parking..."
             styles={{
               container: {
                 flex: 0,
               },
               textInput: {
-                fontSize: 18,
+                fontSize: 16,
+                textAlign: "center",
+                fontWeight: "bold",
+                textDecorationLine: "none",
               },
             }}
             onPress={(data, details = null) => {
@@ -146,9 +147,11 @@ const HomeScreen = () => {
           />
         </View>
 
-        <NavOptions style={tw``} />
+        <NavOptions style={tw`h-1/3 mb-0`} />
+        <SafeAreaView style={tw`h-1/3 px-1 m-0`}>
+          <NavFavourites />
+        </SafeAreaView>
       </View>
-      <NavFavourites style={tw`p-1`} />
     </SafeAreaView>
   );
 };

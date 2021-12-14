@@ -6,7 +6,7 @@ import KeyboardAvoidingWrapper from "./../components/KeyboardAvoidingWrapper";
 const INSTAGRAM_LOGO =
   "https://cdn2.iconfinder.com/data/icons/social-media-2285/512/1_Instagram_colored_svg_1-512.png";
 
-const LoginScreen = ({ navigation }) => (
+const LoginScreen = () => (
   <KeyboardAvoidingWrapper>
     <View style={styles.container}>
       <View style={styles.logoContainer}>
@@ -19,7 +19,7 @@ const LoginScreen = ({ navigation }) => (
           source={require("../assets/logo.png")}
         />
       </View>
-      <LoginForm navigation={navigation} />
+      <LoginForm />
     </View>
   </KeyboardAvoidingWrapper>
 );

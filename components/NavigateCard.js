@@ -4,7 +4,7 @@ import {
   Text,
   View,
   SafeAreaView,
-  TouchableOpacity,
+  KeyboardAvoidingView,
 } from "react-native";
 import tw from "tailwind-react-native-classnames";
 import { selectOrigin } from "../slices/navSlice";
@@ -28,15 +28,8 @@ const NavigateCard = () => {
   }, []);
   return (
     <SafeAreaView style={[tw`bg-white flex-1`]}>
-      <TouchableOpacity
-        onPress={() => navigation.goBack()}
-        style={tw`absolute top-3 left-5 z-50 p-3 rounded-full`}
-      >
-        <Icon name="chevron-left" type="fontawesome" />
-      </TouchableOpacity>
-      <Text style={tw`text-center py-5 text-xl`}>Good Morning</Text>
-      <View style={tw`border-t border-gray-200 flex-shrink`}>
-        <View>
+      <View style={tw`border-t border-gray-200 flex-grow flex-shrink `}>
+        <KeyboardAvoidingView>
           <GooglePlacesAutocomplete
             placeholder="Search Another Address"
             styles={toInputBoxStyles}
@@ -67,7 +60,7 @@ const NavigateCard = () => {
             nearbyPlacesAPI="GooglePlacesSearch"
             debounce={400}
           />
-        </View>
+        </KeyboardAvoidingView>
         <ResultsList />
       </View>
     </SafeAreaView>
@@ -79,13 +72,15 @@ export default NavigateCard;
 const toInputBoxStyles = StyleSheet.create({
   container: {
     backgroundColor: "white",
-    paddingTop: 20,
+    paddingTop: 10,
     flex: 0,
   },
   textInput: {
     backgroundColor: "#DDDDDF",
-    borderRadius: 0,
-    fontSize: 18,
+    borderRadius: 20,
+    fontSize: 14,
+    textAlign: "center",
+    fontWeight: "bold",
   },
   textInputContainer: {
     paddingHorizontal: 20,

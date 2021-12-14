@@ -131,7 +131,7 @@ export async function getUser(userRetrieved) {
   var user;
   return db
     .collection(`users`)
-    .where("owner_uid", "==", `${await firebase.auth().currentUser.email}`)
+    .where("email", "==", `${await firebase.auth().currentUser.email}`)
     .onSnapshot((snapshot) => {
       snapshot.forEach((doc) => {
         //console.log(doc.data());
@@ -143,11 +143,14 @@ export async function getUser(userRetrieved) {
           feePerHour: doc.data().owner_uid,
           phone: doc.data().phone,
           type: doc.data().type,
+          city: doc.data().city,
+          province: doc.data().province,
+          postalcode: doc.data().postalcode,
           profile_picture: doc.data().profile_picture,
           owner_uid: doc.data().owner_uid,
         };
       });
       userRetrieved(user);
-      //console.log(vendorList);
+      // console.log("Firebase => ",user);
     });
 }
