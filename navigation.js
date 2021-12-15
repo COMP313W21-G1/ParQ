@@ -9,6 +9,7 @@ import ProfileScreen from "./screens/ProfileScreen";
 import ReservationScreen from "./screens/ReservationScreen";
 import ReservationDetailScreen from "./screens/ReservationDetailScreen";
 import ModifyReservationScreen from "./screens/ModifyReservationScreen";
+import AddLotScreen from "./screens/AddLotScreen";
 
 const Stack = createStackNavigator();
 const screenOptions = {
@@ -25,6 +26,7 @@ export const SignedInStack = () => (
       <Stack.Screen name="MapScreen" component={MapScreen} />
       <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
       <Stack.Screen name="ReservationScreen" component={ReservationScreen} />
+      <Stack.Screen name="AddLotScreen" component={AddLotScreen} />
       <Stack.Screen
         name="ReservationDetailScreen"
         component={ReservationDetailScreen}
