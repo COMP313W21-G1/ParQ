@@ -34,6 +34,7 @@ const Map = () => {
             let rawDesc = [];
             element.types.forEach((value) => rawDesc.push(value));
             //console.log(rawDesc);
+            //console.log("999999999", element)
             let result = {
               location: element.geometry.location,
               name: element.name,
