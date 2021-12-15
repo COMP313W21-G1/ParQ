@@ -7,7 +7,7 @@ import { selectOrigin } from "../slices/navSlice";
 import { GOOGLE_MAPS_APIKEY } from "@env";
 import { Icon } from "react-native-elements/dist/icons/Icon";
 import { useNavigation } from "@react-navigation/core";
-import { firebase, db, getVendors } from "../firebase";
+import { firebase, db, getVendors, getVendorsFiltered } from "../firebase";
 import { selectSpot, setSpot } from "../slices/spotSlice";
 
 const Map = () => {
@@ -58,11 +58,11 @@ const Map = () => {
 
   useEffect(() => {
     try {
-      getVendors(setVendors);
+      getVendorsFiltered(setVendors, origin);
     } catch (error) {
       console.log(error.message);
     }
-  }, []);
+  }, [origin, GOOGLE_MAPS_APIKEY]);
 
   useEffect(() => {
     mapRef.current.fitToSuppliedMarkers([spot?.name], {
@@ -93,7 +93,7 @@ const Map = () => {
           latitudeDelta: 0.01,
           longitudeDelta: 0.01,
         }}
-        radius={1000}
+        radius={1200}
         strokeWidth={1}
         strokeColor={"#1a66ff"}
         fillColor={"rgba(230,238,255,0.5)"}
@@ -180,8 +180,8 @@ const Map = () => {
             identifier={result.name}
             mapRef={mapRef}
             key={index}
-            image={require("../assets/logo.png")}
-            style={{ maxWidth: 5 }}
+            image={require("../assets/logo-marker.png")}
+            //style={{ maxWidth: 5 }}
             coordinate={{
               latitude: result.latitude,
               longitude: result.longitude,

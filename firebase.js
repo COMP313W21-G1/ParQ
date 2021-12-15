@@ -28,6 +28,62 @@ const db = firebase.firestore();
 
 export { firebase, db };
 
+export function distance(lat1, lon1, lat2, lon2, unit) {
+  var radlat1 = Math.PI * lat1/180
+  var radlat2 = Math.PI * lat2/180
+  var theta = lon1-lon2
+  var radtheta = Math.PI * theta/180
+  var dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
+  dist = Math.acos(dist)
+  dist = dist * 180/Math.PI
+  dist = dist * 60 * 1.1515
+  if (unit=="K") { dist = dist * 1.609344 }
+  if (unit=="N") { dist = dist * 0.8684 }
+  //console.log("1111111111111111", lat1, lon1, lat2, lon2, unit, dist, dist * 1000)
+  
+  return dist
+}
+
+export async function getVendorsFiltered(vendorsRetrieved, origin, radiusMeters=750, unit="K") {
+  var vendorList;
+  return (
+    db
+      .collection(`parkingLots`)
+      //.doc("jb@mail.com")
+      //.doc('KjVYAx27WOPN1Ke6ygCs')
+      .onSnapshot((snapshot) => {
+        vendorList = [];
+        snapshot.forEach((doc) => {
+          //const favItem = doc.data();
+          //console.log(doc.data());
+          if (
+            distance(
+              origin.location.lat,
+              origin.location.lng,
+              doc.data().location.latitude,
+              doc.data().location.longitude,
+              unit
+            ) * 1000 <= radiusMeters
+          ) {
+            vendorList.push({
+              address: doc.data().parkingAddress,
+              latitude: doc.data().location.latitude,
+              longitude: doc.data().location.longitude,
+              name: doc.data().company,
+              feePerHour: doc.data().feePerHour,
+              docId: doc.id,
+              totalParkingSpots: doc.data().totalParkingSpots,
+            });
+          }
+        });
+        //console.log("99999999999999999", vendorList)
+        vendorsRetrieved(vendorList);
+        //console.log(vendorList);
+      })
+  );
+}
+
+
 export async function getVendors(vendorsRetrieved) {
   var vendorList;
   return (

@@ -12,7 +12,7 @@ import { selectOrigin } from "../slices/navSlice";
 import { GOOGLE_MAPS_APIKEY } from "@env";
 import { useNavigation } from "@react-navigation/core";
 import { useSelector, useDispatch } from "react-redux";
-import { firebase, db, getVendors } from "../firebase";
+import { firebase, db, getVendors, getVendorsFiltered } from "../firebase";
 import { FlatList } from "react-native-gesture-handler";
 import { setSpot, selectSpot } from "../slices/spotSlice";
 import { add } from "react-native-reanimated";
@@ -37,7 +37,7 @@ const ResultsList = () => {
 
   useEffect(() => {
     if (!origin) return;
-    getVendors(setVendors);
+    getVendorsFiltered(setVendors, origin);
     const getApiResults = async () => {
       fetch(
         `https://maps.googleapis.com/maps/api/place/nearbysearch/json?keyword=parking&location=${origin.location.lat}%2C${origin.location.lng}&radius=750&key=${GOOGLE_MAPS_APIKEY}`
