@@ -6,11 +6,13 @@ import {
   StyleSheet,
   Pressable,
   TouchableOpacity,
+  SafeAreaView,
   Alert,
 } from "react-native";
+import tw from "tailwind-react-native-classnames";
 
 import { firebase, db } from "../firebase";
-import ModalDropdown from 'react-native-modal-dropdown';
+import ModalDropdown from "react-native-modal-dropdown";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import Validator from "email-validator";
@@ -20,23 +22,15 @@ import { useNavigation } from "@react-navigation/core";
 import PhoneInput from "react-native-phone-number-input";
 //import { Colors } from "react-native/Libraries/NewAppScreen";
 
-
-
-
-
-
-
 // icon
-import { Octicons, Ionicons } from '@expo/vector-icons';
+import { Octicons, Ionicons } from "@expo/vector-icons";
 import { FlatList } from "react-native-gesture-handler";
 
 const AddLotScreen = () => {
-
   //phone use cases
-  const phoneInput = useRef<PhoneInput>(null);
+  const phoneInput = useRef < PhoneInput > null;
   const [hidePassword, setHidePassword] = useState(true);
   const [hidePassword2, setHidePassword2] = useState(true);
-
 
   const navigation = useNavigation();
   const SignupFormSchema = Yup.object().shape({
@@ -45,62 +39,84 @@ const AddLotScreen = () => {
     feePerHour: Yup.string().required().min(2, "A fee per hour is required"),
     location: Yup.string().required().min(2, "A location is required"),
     occupied: Yup.string().required().min(2, "How many lots are occupied"),
-    parkingaddress: Yup.string().required().min(2, "A Parking address is required"),
+    parkingaddress: Yup.string()
+      .required()
+      .min(2, "A Parking address is required"),
     postalCode: Yup.string().required().min(2, "A city is required"),
     province: Yup.string().required().min(2, "A province is required"),
-    totalSpots: Yup.string().required().min(7, "How many spot do you have in total")
+    totalSpots: Yup.string()
+      .required()
+      .min(7, "How many spot do you have in total"),
   });
 
- 
   //const onSignup = async (email, password,firstname, lastname, streetaddress, city, province, postalcode, username, phone) => {
-  const onSignup = async (  city, company, feePerHour, location, occupied, parkingaddress, postalCode, province,totalSpots) => {
+  const onSignup = async (
+    city,
+    company,
+    feePerHour,
+    location,
+    occupied,
+    parkingaddress,
+    postalCode,
+    province,
+    totalSpots
+  ) => {
+    try {
+      // const authUser = await firebase
+      //   .auth()
+      //   .createUserWithEmailAndPassword(email, password);
+      // console.log("Firebase User Created Successfully!");
+      // Alert.alert("Firebase User Created Successfully!");
 
-    
-    
-
-      try {
-        // const authUser = await firebase
-        //   .auth()
-        //   .createUserWithEmailAndPassword(email, password);
-        // console.log("Firebase User Created Successfully!");
-        // Alert.alert("Firebase User Created Successfully!");
-
-        db.collection("parkingLots")
-          .add({
-            city:city,
-            company:company,
-            feePerHour:feePerHour,
-            location:location,
-            occupied:occupied,
-            parkingaddress:parkingaddress,
-            postalCode:postalCode,
-            province:province,
-            totalSpots:totalSpots,
-          });
-      } catch (error) {
-        console.log(error.message);
-        Alert.alert("Attention!", error.message);
-      }
-    
-
+      db.collection("parkingLots").add({
+        city: city,
+        company: company,
+        feePerHour: feePerHour,
+        location: location,
+        occupied: occupied,
+        parkingaddress: parkingaddress,
+        postalCode: postalCode,
+        province: province,
+        totalSpots: totalSpots,
+      });
+    } catch (error) {
+      console.log(error.message);
+      Alert.alert("Attention!", error.message);
+    }
   };
 
   return (
-
-    <View
-    style={styles.wrapper}>
+    <SafeAreaView style={[styles.wrapper, tw`px-7 py-4 m-5 `]}>
       <Formik
-        initialValues={{city: "", company: "",  feePerHour: "", location: "",   occupied: "", parkingaddress: "", postalCode: "",  province: "",totalSpots: ""}}
+        initialValues={{
+          city: "",
+          company: "",
+          feePerHour: "",
+          location: "",
+          occupied: "",
+          parkingaddress: "",
+          postalCode: "",
+          province: "",
+          totalSpots: "",
+        }}
         onSubmit={(values) => {
-          onSignup( values.city, values.company, values.feePerHour,  values.location, values.occupied, values.parkingaddress, values.postalCode, values.province,values.totalSpots );
+          onSignup(
+            values.city,
+            values.company,
+            values.feePerHour,
+            values.location,
+            values.occupied,
+            values.parkingaddress,
+            values.postalCode,
+            values.province,
+            values.totalSpots
+          );
         }}
         validationSchema={SignupFormSchema}
         validateOnMount={true}
       >
         {({ handleChange, handleBlur, handleSubmit, values, isValid }) => (
           <>
-            
-
             <View
               style={[
                 styles.inputField,
@@ -143,13 +159,13 @@ const AddLotScreen = () => {
               />
             </View>
 
-
             <View
               style={[
                 styles.inputField,
                 {
                   borderColor:
-                    1 > values.feePerHour.length || values.feePerHour.length >= 2
+                    1 > values.feePerHour.length ||
+                    values.feePerHour.length >= 2
                       ? "#CCC"
                       : "red",
                 },
@@ -188,28 +204,27 @@ const AddLotScreen = () => {
               />
             </View>
 
-
             <View
               style={[
                 styles.inputField,
                 {
                   borderColor:
-                  //1 > values.phone.length || (values.phone.length < 7 && values.phone.length > 1)
-                   values.occupied.length >= 1 || values.occupied.length <= 1
+                    //1 > values.phone.length || (values.phone.length < 7 && values.phone.length > 1)
+                    values.occupied.length >= 1 || values.occupied.length <= 1
                       ? "#CCC"
                       : "red",
                 },
               ]}
             >
               <TextInput
-               placeholderTextColor="#444"
-               placeholder="How many lots are occupied"
-               autoCapitalize="none"
-               textContentType="occupied"
-               autoFocus={true}
-               onChangeText={handleChange("occupied")}
-               onBlur={handleBlur("occupied")}
-               value={values.occupied}
+                placeholderTextColor="#444"
+                placeholder="How many lots are occupied"
+                autoCapitalize="none"
+                textContentType="occupied"
+                autoFocus={true}
+                onChangeText={handleChange("occupied")}
+                onBlur={handleBlur("occupied")}
+                value={values.occupied}
               />
             </View>
 
@@ -218,15 +233,14 @@ const AddLotScreen = () => {
                 styles.inputField,
                 {
                   borderColor:
-                    1 > values.parkingaddress.length || values.parkingaddress.length >= 2
+                    1 > values.parkingaddress.length ||
+                    values.parkingaddress.length >= 2
                       ? "#CCC"
                       : "red",
                 },
               ]}
             >
-             
-
-           <TextInput
+              <TextInput
                 placeholderTextColor="#444"
                 placeholder="Please enter the parking lot address"
                 autoCapitalize="none"
@@ -241,15 +255,14 @@ const AddLotScreen = () => {
                 styles.inputField,
                 {
                   borderColor:
-                    1 > values.postalCode.length || values.postalCode.length >= 2
+                    1 > values.postalCode.length ||
+                    values.postalCode.length >= 2
                       ? "#CCC"
                       : "red",
                 },
               ]}
             >
-             
-
-           <TextInput
+              <TextInput
                 placeholderTextColor="#444"
                 placeholder="Please enter the postal address for the parking lot address"
                 autoCapitalize="none"
@@ -270,48 +283,43 @@ const AddLotScreen = () => {
                 },
               ]}
             >
-             
-
-           <TextInput
+              <TextInput
                 placeholderTextColor="#444"
                 placeholder="Please enter the province"
                 autoCapitalize="none"
                 onChangeText={handleChange("province")}
                 onBlur={handleBlur("province")}
-                value={values.province}   
+                value={values.province}
               />
             </View>
 
-   
-
             <View
-                       style={[
-                        styles.inputField,
-                        {
-                          borderColor:
-                            1 > values.city.length || values.city.length >= 2
-                              ? "#CCC"
-                              : "red",
-                        },
-                      ]}
+              style={[
+                styles.inputField,
+                {
+                  borderColor:
+                    1 > values.city.length || values.city.length >= 2
+                      ? "#CCC"
+                      : "red",
+                },
+              ]}
             >
-             
-
-           <TextInput
+              <TextInput
                 placeholderTextColor="#444"
                 placeholder="Please enter the total Spots"
                 autoCapitalize="none"
                 onChangeText={handleChange("totalSpots")}
                 onBlur={handleBlur("totalSpots")}
-                value={values.totalSpots}   
+                value={values.totalSpots}
               />
             </View>
 
-        
-
             <Pressable
               titleSize={20}
-              style={styles.button(isValid)}
+              style={[
+                styles.button(isValid),
+                tw`w-9/12 rounded-lg m-auto mt-2`,
+              ]}
               onPress={handleSubmit}
               disabled={!isValid}
             >
@@ -320,10 +328,9 @@ const AddLotScreen = () => {
           </>
         )}
       </Formik>
-    </View>
+    </SafeAreaView>
   );
 };
-
 
 export default AddLotScreen;
 
@@ -364,13 +371,11 @@ const styles = StyleSheet.create({
   },
 
   rightIcon: {
-    alignSelf: 'flex-end',
+    alignSelf: "flex-end",
   },
-
-  
 
   dropdown: {
     fontSize: 18,
-    height: 70
+    height: 70,
   },
 });

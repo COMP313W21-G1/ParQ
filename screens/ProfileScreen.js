@@ -108,12 +108,7 @@ const ProfileScreen = () => {
                       firebase
                         .auth()
                         .signOut()
-                        .then(() =>
-                          navigation.reset({
-                            index: 0,
-                            routes: [{ name: "LoginScreen" }],
-                          })
-                        );
+                        .then(() => navigation.navigate("SignupScreen"));
                   },
                   style: "ok",
                 },
