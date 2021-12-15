@@ -26,6 +26,19 @@ const db = firebase.firestore();
 
 export { firebase, db };
 
+export async function isVendor(emailId) {
+  var docRef = db
+    .collection(`users`)
+    .doc(`${emailId}`);
+  return docRef.get().then((doc) => {
+    if (doc.exists) {
+      return doc.data()?.type === "vendor";
+    } else {
+      return false;
+    }
+  });
+}
+
 export function distance(lat1, lon1, lat2, lon2, unit) {
   var radlat1 = (Math.PI * lat1) / 180;
   var radlat2 = (Math.PI * lat2) / 180;
