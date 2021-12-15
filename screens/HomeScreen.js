@@ -141,6 +141,7 @@ const HomeScreen = () => {
             query={{
               key: GOOGLE_MAPS_APIKEY,
               language: "en",
+              components: 'country:ca',
             }}
             nearbyPlacesAPI="GooglePlacesSearch"
             debounce={400}
