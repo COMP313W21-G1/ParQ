@@ -207,6 +207,7 @@ const Map = () => {
                 location: loc,
                 description: `Rate= $${result.feePerHour}/Hr, # Spots= ${result.totalParkingSpots}`,
                 vendor: true,
+                vendorParkingLotId: result.docId,
               });
             }}
           ></Marker>
