@@ -39,7 +39,7 @@ const ReservationDetailScreen = (props) => {
                   
                   deleteReservation(reservationItem.id);              
                  
-                  console.log('delete');
+                  console.log(`Reservation with id: ${reservationItem.id} was deleted`);
                   props.navigation.navigate('ReservationScreen');
                 }}
             />

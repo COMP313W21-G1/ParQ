@@ -16,19 +16,29 @@
 
   
   import DateTimePicker from '@react-native-community/datetimepicker';
-  import {  modifyReservation, convertDateTime, getTimeStamp, getParkingSpots } from '../firebase';
+  import {  addReservation, convertDateTime, getTimeStamp, getParkingSpots } from '../firebase';
   import { useIsFocused } from '@react-navigation/native';
   
   
   export default function AddItem(props) {
-    //const DateTimePicker = require('@react-native-community/datetimepicker');
-    const { reservationItem } = props.route.params;
+    const { vendorParkingLotId } = props.route.params;
+      //add 30 minutes to date
+    var minutesToAdd=30;
+    const currentDate = new Date();
+    var startTimestamp = getTimeStamp(currentDate);
+    var endTimestamp = getTimeStamp(new Date(currentDate.getTime() + minutesToAdd*60000));   
+    const reservationItem =  {
+        end: endTimestamp,
+        owner_uid: `${firebase.auth().currentUser.uid}`,
+        parkingLotId: vendorParkingLotId,
+        parkingSpotId: '',
+        start: startTimestamp,
+      };
     const [res, setRes] = useState(reservationItem);
     const [start, setStart] = useState(convertDateTime(reservationItem.start));
     const [end, setEnd] = useState(convertDateTime(reservationItem.end));
     const [spotsList, setSpotsList] = useState([]);
-    const [spotsSelected, setSpotSelected] = useState(reservationItem.parkingSpotId);
-    const [updateStatus, setupdateStatus] = useState('Updated!');
+    const [spotsSelected, setSpotSelected] = useState();
     const isFocused = useIsFocused();
 
   
@@ -44,7 +54,7 @@
         
       console.log('submit button pressed...');
        await setRes({ 
-          id: reservationItem.id,
+         // id: reservationItem.id,
           end: getTimeStamp(end),
           owner_uid: reservationItem.owner_uid, 
           parkingLotId: reservationItem.parkingLotId, 
@@ -53,10 +63,10 @@
       }); 
       try{
             
-          await modifyReservation(res, setupdateStatus);
+          await addReservation(res);
           
           //Alert.alert( await updateStatus);
-          props.navigation.navigate('ReservationScreen');
+          //props.navigation.navigate('ReservationScreen');
       }
       catch (e){
         Alert.alert('Something went wrong');
@@ -133,33 +143,16 @@
 
     return (      
       <View style={styles.main}>
-        <Text style={styles.title}>Modify Reservation</Text>
-        <View> 
-             <Text>Reservation Id</Text>          
-              <TextInput
-              autoFocus={true}
-              style={styles.itemInput}  
-              editable = {false}
-              value={reservationItem.id}
-              />
-      </View>
+        <Text style={styles.title}>Add New Reservation</Text>
 
       <View> 
-             <Text>Current Parking Spot</Text>          
-
-             <TextInput
-                autoFocus={true}
-                style={styles.itemInput}  
-                editable = {false}
-                value={reservationItem.parkingSpotId} 
-                />
-                <Text>Selected Parking Spot</Text>  
+                <Text>Select A Parking Spot</Text>  
                 <SelectDropdown 
                     style={styles.button}
                     //style={styles.itemInput}
                     containerStyle={styles.shadow}
                     data={spotsList}
-                    defaultButtonText={'Select a different spot'}
+                    defaultButtonText={'Select a parking spot'}
                     defaultValue={spotsSelected}
                     onSelect={(selectedItem, index) => { 
                         console.log(selectedItem, index)
@@ -176,43 +169,11 @@
                         return item
                     }}
                 />
-               
-                 {/*         
-                 <View style={{minHeight: 75}}>
-                    <DropDownPicker
-                        open={open}
-                        value={value}
-                        items={items}
-                        setOpen={setOpen}
-                        setValue={setValue}
-                        setItems={setItems}
-                    /> 
-                </View>
-
-
-
-                <TextInput
-                autoFocus={true}
-                style={styles.itemInput}  
-                editable = {false}
-                value={reservationItem.parkingSpotId} 
-                />*/}
-
       </View>
 
          <View> 
              <Text>Start</Text> 
-             {/**               
-              <TextInput
-              //placeholderTextColor="#444"
-              //placeholder="start" 
-              //autoCapitalize="none"
-              autoFocus={true}
-              style={styles.itemInput}
-              onChangeText={handleChangeStart} 
-              //onBlur={handleBlur}
-              value={start}
-              />*/}  
+
                 <View>
                     <View>
                         <Button onPress={showDatepickerStart} title="Choose a start date!" />
@@ -235,18 +196,7 @@
   
       <View> 
              <Text>End</Text> 
-             {/**          
-              <TextInput
-              //placeholderTextColor="#444"
-              //placeholder="start"
-              //autoCapitalize="none"
-              autoFocus={true}
-              style={styles.itemInput}
-              onChangeText={handleChangeEnd} 
-              //onBlur={handleBlur}
-              value={end}
-              />*/}
-                              <View>
+                <View>
                     <View>
                         <Button onPress={showDatepickerEnd} title="Choose an end date!" />
                     </View>

@@ -169,7 +169,7 @@ export async function getReservations( spotsRetreived ){
     "parkingLotId": 'OdtpARL4PSmPTBmqXtIP',
     "parkingSpotId": '94fDGioNIuT4mvv1l6EJ',
     "start": startTimestamp,
-  }
+  };
   
   //addReservation(resItem); 
   
@@ -363,6 +363,14 @@ export async function modifyReservation(reservationItem, setupdateStatus){
       if (  //start is greater than or equal to current date time
             (new Date(convertDateTime(reservationItem.start)) >= new Date() ) 
             && spotAvailable ){
+              db.collection("reservations").doc(reservationItem.id).update({
+                //id: reservationItem.id,
+                end: reservationItem.end,
+                owner_uid: firebase.auth().currentUser.uid,
+                parkingLotId: reservationItem.parkingLotId, 
+                parkingSpotId: reservationItem.parkingSpotId, 
+                start: reservationItem.start,
+              });
 
        updateSnapshot = await db.collection("reservations").doc(reservationItem.id).update({
         //id: reservationItem.id,
@@ -389,6 +397,7 @@ export async function modifyReservation(reservationItem, setupdateStatus){
 export function deleteReservation(reservationId){
   db.collection("reservations").doc(reservationId).delete().then(() => {
     console.log("Document successfully deleted!");
+    Alert.alert(`Reservation Deleted: ${reservationItem.id}`);
   }).catch((error) => {
       console.error("Error removing document: ", error);
   });

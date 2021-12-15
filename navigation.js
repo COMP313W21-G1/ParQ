@@ -8,7 +8,8 @@ import SignupScreen from "./screens/SignupScreen";
 import ProfileScreen from "./screens/ProfileScreen";
 import ReservationScreen from "./screens/ReservationScreen";
 import ReservationDetailScreen from "./screens/ReservationDetailScreen";
-import ModifyReservationScreen from "./screens/ModifyReservationScreen"
+import ModifyReservationScreen from "./screens/ModifyReservationScreen";
+import AddReservationScreen from "./screens/AddReservationScreen";
 
 const Stack = createStackNavigator();
 const screenOptions = {
@@ -27,6 +28,7 @@ export const SignedInStack = () => (
       <Stack.Screen name="ReservationScreen" component={ReservationScreen} />      
       <Stack.Screen name="ReservationDetailScreen" component={ReservationDetailScreen} />
       <Stack.Screen name="ModifyReservationScreen" component={ModifyReservationScreen} />
+      <Stack.Screen name="AddReservationScreen" component={AddReservationScreen} />
     </Stack.Navigator>
   </NavigationContainer>
 );
