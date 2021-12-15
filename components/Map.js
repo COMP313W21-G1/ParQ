@@ -8,7 +8,7 @@ import { GOOGLE_MAPS_APIKEY } from "@env";
 import { Icon } from "react-native-elements/dist/icons/Icon";
 import { useNavigation } from "@react-navigation/core";
 import { firebase, db, getVendors } from "../firebase";
-import { setSpot } from "../slices/spotSlice";
+import { selectSpot, setSpot } from "../slices/spotSlice";
 
 const Map = () => {
   const origin = useSelector(selectOrigin);
@@ -18,6 +18,7 @@ const Map = () => {
   const mapRef = useRef(null);
   const dispatch = useDispatch();
   const [vendors, setVendors] = useState([]);
+  const spot = useSelector(selectSpot);
 
   useEffect(() => {
     //   //if (!origin || !destination) return;
@@ -63,6 +64,13 @@ const Map = () => {
     }
   }, []);
 
+  useEffect(() => {
+    mapRef.current.fitToSuppliedMarkers([spot?.name], {
+      edgePadding: { top: 5, right: 5, bottom: 5, left: 5 },
+      animated: true,
+    });
+  }, [spot])
+
   return (
     <MapView
       ref={mapRef}
@@ -93,6 +101,7 @@ const Map = () => {
 
       {origin?.location && (
         <Marker
+          identifier="Origin"
           mapRef={mapRef}
           coordinate={{
             latitude: origin.location.lat,
@@ -130,6 +139,7 @@ const Map = () => {
         //console.log(result);
         return (
           <Marker
+            identifier={result.name}
             mapRef={mapRef}
             key={index}
             coordinate={{
@@ -167,6 +177,7 @@ const Map = () => {
         //console.log(result.totalParkingSpots);
         return (
           <Marker
+            identifier={result.name}
             mapRef={mapRef}
             key={index}
             image={require("../assets/logo.png")}
