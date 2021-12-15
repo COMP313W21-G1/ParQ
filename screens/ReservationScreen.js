@@ -1,138 +1,157 @@
+import {
+  StyleSheet,
+  Button,
+  Text,
+  View,
+  SafeAreaView,
+  Image,
+  TouchableOpacity,
+  FlatList,
+  StatusBar,
+} from "react-native";
 
-import { StyleSheet, Button, Text, View, SafeAreaView, Image, TouchableWithoutFeedback, FlatList, StatusBar } from 'react-native'
+import tw from "tailwind-react-native-classnames";
 
-import tw from 'tailwind-react-native-classnames';
-
+import { Icon } from "react-native-elements";
 import { convertDateTime, getReservations } from "../firebase";
-import React, {   useEffect, useState} from 'react';
-import { useIsFocused } from '@react-navigation/native';
+import React, { useEffect, useState } from "react";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
 
+const ReservationItem = ({ reservationItem, nav }) => (
+  <SafeAreaView style={tw`px-4 pt-3 flex-col justify-between w-full`}>
+    <View style={tw`flex-row justify-evenly w-9/12 m-auto px-8 pb-3`}>
+      <Text style={tw`text-blue-600 font-bold`}>
+        Res ID: {reservationItem.id}
+      </Text>
+    </View>
+    <View style={tw`flex-row pt-2 justify-between w-10/12 mx-auto`}>
+      <Text style={tw`font-bold`}>Start Time:</Text>
+      <Text>{`${convertDateTime(reservationItem.start)}`}</Text>
+    </View>
+    <View style={tw`flex-row pt-2 justify-between w-10/12 mx-auto`}>
+      <Text style={tw`font-bold`}>End Time: </Text>
+      <Text> {`${convertDateTime(reservationItem.end)}`}</Text>
+    </View>
+    <View style={tw`flex-row pt-2 justify-between w-10/12 mx-auto`}>
+      <Text style={tw`font-bold`}>Address:</Text>
+      <Text style={tw`text-gray-500`}>
+        {reservationItem.spotInfo.parkingAddress}
+      </Text>
+    </View>
+    <View style={tw`flex-row pt-2 pb-5 justify-between w-10/12 mx-auto`}>
+      <Text style={tw`font-bold`}>Parking Spot:</Text>
+      <Text style={tw`text-gray-500`}>
+        {reservationItem.spotInfo.parkingSpots.id}
+      </Text>
+    </View>
 
-const ReservationItem = ({ reservationItem , nav}) => (
-    <View> 
-      {/*console.log(convertDateTime(reservationItem.end))*/}
-        <View style={tw`flex-row`}>
-          <View style={tw`justify-start`}>
-            <Text style={tw`text-blue-600`}>Res ID: {reservationItem.id}</Text>
-            <Text style={styles.textContainer}>Start Time: {`${convertDateTime(reservationItem.start)}`}</Text>
-            <Text style={styles.textContainer}>End Time: {`${convertDateTime(reservationItem.end)}`}</Text>
-            <Text style={tw`text-gray-500`}>Address: {reservationItem.spotInfo.parkingAddress}</Text>
-            <Text style={tw`text-gray-500`}>Parking Spot: {reservationItem.spotInfo.parkingSpots.id}</Text>
-          </View>  
-          <View>
-            <Button
-              title="Details"
-              onPress={() =>{  
-                nav.navigate('ReservationDetailScreen', {reservationItem})}}
-            />
-          </View>
-        </View>   
-    </View> 
-);  
+    <View style={tw`w-1/4 m-auto py-1`}>
+      <Button
+        title="Details"
+        onPress={() => {
+          nav.navigate("ReservationDetailScreen", { reservationItem });
+        }}
+      />
+    </View>
+  </SafeAreaView>
+);
 
-
-
-const ReservationScreen = ( props) => {
-
+const ReservationScreen = (props) => {
   const isFocused = useIsFocused();
   const [reservationsList, setReservationsList] = useState([]);
+  const navigation = useNavigation();
   //const { update } = props.route.params;
-  
+
   fetchReservationListData = async () => {
     //fetch some data and set state here
-    try {        
+    try {
       getReservations(setReservationsList);
     } catch (error) {
       console.log(error.message);
-    } 
-  }
+    }
+  };
 
   useEffect(() => {
-    isFocused &&  fetchReservationListData()      
-  }, [isFocused]); 
-  
-  
-  return (reservationsList.length > 0 ) ? 
- 
-  //if spots are available, add them to the view
-    <SafeAreaView style={styles.container}>
-      <Text style={tw`font-semibold text-lg`}>Reservation History</Text>
-  
-      {/*
-        reservationsList.map((item) =>
-        <ReservationItem                         
-            key = {item.id}  
-            id = {item.id}
-            reservationItem = {item}
-            nav = {props.navigation} 
-          /> 
-      ) 
-      */}
-     
+    isFocused && fetchReservationListData();
+  }, [isFocused]);
+
+  return reservationsList.length > 0 ? (
+    //if spots are available, add them to the view
+    <SafeAreaView style={tw`mx-auto pt-10`}>
+      <TouchableOpacity
+        onPress={() => navigation.navigate("HomeScreen")}
+        style={tw`bg-gray-100 absolute top-8 left-4 z-50 p-2 rounded-full shadow-lg`}
+      >
+        <Icon name="chevron-left" type="fontawesome" size={30} />
+      </TouchableOpacity>
+      <Text style={tw`font-bold text-3xl text-center py-5`}>
+        Reservation History
+      </Text>
+
       <FlatList
         //extraData={reservationsList}
-        data={reservationsList} 
-        keyExtractor={item => item.id}
-            ItemSeparatorComponent={() => (
-          <View style={[tw`bg-gray-200`, { height: 0.5 }]} />
+        data={reservationsList}
+        style={tw`border-4 rounded-lg border-gray-400  `}
+        keyExtractor={(item) => item.id}
+        ItemSeparatorComponent={() => (
+          <View style={[tw`bg-gray-200`, { height: 1 }]} />
         )}
-         renderItem={({ item ,})  => (
+        renderItem={({ item }) => (
           <>
-          {
-            //console.log(item.id)
-          } 
-            <ReservationItem    
-              //extraData={props.update}                     
-              key = {item.id}
-              id = {item.id}
-              reservationItem = {item}
-              nav = {props.navigation}   
-            />  
-            
+            {
+              //console.log(item.id)
+            }
+            <ReservationItem
+              //extraData={props.update}
+              key={item.id}
+              id={item.id}
+              reservationItem={item}
+              nav={props.navigation}
+            />
           </>
         )}
       />
-     
     </SafeAreaView>
-   
-    :
-
+  ) : (
     //if no spots are  booked, display a message
     <View style={styles.textContainer}>
       <Text style={styles.emptyTitle}>No Reservations Found! </Text>
-      <Text style={styles.emptySubtitle}>Add a new reservation from the map screen</Text>     
+      <Text style={styles.emptySubtitle}>
+        Add a new reservation from the map screen
+      </Text>
     </View>
-}
+  );
+};
 
 const styles = StyleSheet.create({
-container: {
-  flex: 1,
-  backgroundColor: '#ADD8E6',
-  paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
-},
-listItem: {
-  marginTop: 8,
-  marginBottom: 8
-},
-textContainer: {
-  flex: 1,
-  justifyContent: 'center',
-  alignItems: 'center',
-},
-titleStyle: {
-  fontSize: 30
-},
-subtitleStyle: {
-  fontSize: 18
-},
-emptyTitle: {
-  fontSize: 32,
-  marginBottom: 16
-},
-emptySubtitle: {
-  fontSize: 18,
-  fontStyle: 'italic'
-}
+  container: {
+    flex: 1,
+    backgroundColor: "#ADD8E6",
+    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
+  },
+  listItem: {
+    marginTop: 8,
+    marginBottom: 8,
+  },
+  textContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  titleStyle: {
+    fontSize: 30,
+  },
+  subtitleStyle: {
+    fontSize: 18,
+  },
+  emptyTitle: {
+    fontSize: 32,
+    marginBottom: 16,
+  },
+  emptySubtitle: {
+    fontSize: 18,
+    fontStyle: "italic",
+  },
 });
 
 export default ReservationScreen;

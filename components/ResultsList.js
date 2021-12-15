@@ -16,6 +16,7 @@ import { firebase, db, getVendors, getVendorsFiltered } from "../firebase";
 import { FlatList } from "react-native-gesture-handler";
 import { setSpot, selectSpot } from "../slices/spotSlice";
 import { add } from "react-native-reanimated";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const ListItem = ({ address, name, latitude, longitude }) => (
   <View style={tw`bg-gray-100 flex-col m-1 p-3`}>
@@ -86,48 +87,50 @@ const ResultsList = () => {
   }, [apiResults, vendors]);
 
   return (
-    <FlatList
-      data={results}
-      keyExtractor={(item, index) => index}
-      ItemSeparatorComponent={() => (
-        <View style={[tw`bg-gray-200`, { height: 0.5 }]} />
-      )}
-      renderItem={({ item: { name, address, location, description } }) => (
-        <TouchableOpacity
-          style={tw`flex-col items-center p-2 m-0`}
-          onPress={() => {
-            let loc = {};
-            loc = { lat: location?.lat, lng: location?.lng };
-            console.log("Results LINE 93inc101 =>", loc);
-            dispatch(
-              setSpot({
+    <SafeAreaView>
+      <FlatList
+        data={results}
+        keyExtractor={(item, index) => index}
+        ItemSeparatorComponent={() => (
+          <View style={[tw`bg-gray-200`, { height: 0.5 }]} />
+        )}
+        renderItem={({ item: { name, address, location, description } }) => (
+          <TouchableOpacity
+            style={tw`flex-col items-center p-2 m-0`}
+            onPress={() => {
+              let loc = {};
+              loc = { lat: location?.lat, lng: location?.lng };
+              console.log("Results LINE 93inc101 =>", loc);
+              dispatch(
+                setSpot({
+                  name: name,
+                  address: address,
+                  location: loc,
+                  description: description,
+                  vendor: false,
+                })
+              );
+              console.log("|||+++>Resultd LN 104", spot);
+              navigation.navigate("ParkingDetailsCard", {
                 name: name,
                 address: address,
                 location: loc,
                 description: description,
                 vendor: false,
-              })
-            );
-            console.log("|||+++>Resultd LN 104", spot);
-            navigation.navigate("ParkingDetailsCard", {
-              name: name,
-              address: address,
-              location: loc,
-              description: description,
-              vendor: false,
-            });
-          }}
-        >
-          {/* <ListItem name={name} address={address} /> */}
-          <Text>{name}:</Text>
-          <Text> {address}</Text>
-          {/* <View>
+              });
+            }}
+          >
+            {/* <ListItem name={name} address={address} /> */}
+            <Text>{name}:</Text>
+            <Text> {address}</Text>
+            {/* <View>
             <Text style={tw`font-semibold text-lg`}>{name}</Text>
             <Text style={tw`text-gray-500`}>{address}</Text>
           </View> */}
-        </TouchableOpacity>
-      )}
-    />
+          </TouchableOpacity>
+        )}
+      />
+    </SafeAreaView>
   );
 };
 const styles = StyleSheet.create({});
