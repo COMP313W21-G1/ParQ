@@ -16,6 +16,7 @@ import { useNavigation } from "@react-navigation/core";
 import { firebase, db } from "../firebase";
 import { selectOrigin, setOrigin } from "../slices/navSlice";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { selectVendor } from "../slices/vendorSlice";
 
 async function getFavourites(favesRetrieved) {
   var favsList;
@@ -61,6 +62,7 @@ const NavFavourites = () => {
   const [faves, setFaves] = useState([]);
   const navigation = useNavigation();
   const dispatch = useDispatch();
+  const vendor = useSelector(selectVendor);
 
   useEffect(() => {
     try {
@@ -70,7 +72,8 @@ const NavFavourites = () => {
     }
   }, []);
 
-  return (
+  return (<>
+  {!vendor &&
     <SafeAreaView nestedScrollEnabled={true} style={tw``}>
       <FlatList
         scrollEnabled={true}
@@ -127,6 +130,8 @@ const NavFavourites = () => {
         )}
       />
     </SafeAreaView>
+    }
+    </>
   );
 };
 
