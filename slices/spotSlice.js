@@ -17,6 +17,6 @@ export const spotSlice = createSlice({
 export const { setSpot } = spotSlice.actions;
 
 // Selectors
-export const selectSpot = (state) => state.nav.spot;
+export const selectSpot = (state) => state.spot.spot;
 
 export default spotSlice.reducer;
