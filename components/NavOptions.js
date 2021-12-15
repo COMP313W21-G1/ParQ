@@ -5,6 +5,7 @@ import { Icon } from 'react-native-elements'
 import { useSelector } from 'react-redux'
 import tw from 'tailwind-react-native-classnames'
 import { selectOrigin } from '../slices/navSlice'
+import { selectVendor } from '../slices/vendorSlice'
 
 const data = [
   {
@@ -24,6 +25,15 @@ const data = [
     title: "Profile",
     image: "https://www.gardeningknowhow.com/wp-content/uploads/2021/07/sulfur-cosmos-mexican-aster-flowers.jpg",
     screen: "ProfileScreen", // change in future
+  }
+]
+
+const dataVendor = [
+  {
+    id: "789",
+    title: "Profile",
+    image: "https://www.gardeningknowhow.com/wp-content/uploads/2021/07/sulfur-cosmos-mexican-aster-flowers.jpg",
+    screen: "ProfileScreen", // change in future
   },
   {
     id: "012",
@@ -36,10 +46,11 @@ const data = [
 const NavOptions = () => {
   const navigation = useNavigation();
   const origin = useSelector(selectOrigin);
+  const vendor = useSelector(selectVendor);
 
   return (
     <FlatList 
-      data={data}
+      data={!vendor ? data : dataVendor}
       horizontal
       keyExtractor={(item) => item.id}
       renderItem={({ item }) => (

@@ -26,6 +26,19 @@ const db = firebase.firestore();
 
 export { firebase, db };
 
+export async function isVendor(emailId) {
+  var docRef = db
+    .collection(`users`)
+    .doc(`${emailId}`);
+  return docRef.get().then((doc) => {
+    if (doc.exists) {
+      return doc.data()?.type === "vendor";
+    } else {
+      return false;
+    }
+  });
+}
+
 export function distance(lat1, lon1, lat2, lon2, unit) {
   var radlat1 = (Math.PI * lat1) / 180;
   var radlat2 = (Math.PI * lat2) / 180;
@@ -291,7 +304,7 @@ export async function addReservation(reservationItem) {
       var isBetweenEndA = false;
       var isBetweenStartB = false;
       var isBetweenEndB = false;
-
+     
       isBetweenStartA =
         new Date(convertDateTime(reservationItem.start)) >=
           new Date(convertDateTime(doc.data().start)) &&
@@ -327,15 +340,17 @@ export async function addReservation(reservationItem) {
           isBetweenStartB ||
           isBetweenEndB) &&
         spotAvailable
-      ) {
+      ) { 
         spotAvailable = false;
         console.log("Oops, the spot is taken for that time ");
       }
     });
     //console.log(spotAvailable);
+
+    const currentDate = new Date();
     if (
-      //start is greater than or equal to current date time
-      new Date(convertDateTime(reservationItem.start)) >= new Date() &&
+      //start is greater than or equal to current date time minus 5 min
+      new Date(convertDateTime(reservationItem.start)) >= new Date(currentDate.getTime() - 5*60000) &&
       spotAvailable
     ) {
       console.log("Great, the spot is available for that time ");
@@ -363,6 +378,8 @@ export async function addReservation(reservationItem) {
 export async function getParkingSpots(reservationItem, setSpotsList) {
   var allSpots = [];
   var allSpotIds = [];
+
+  //console.log('parking lot: ', reservationItem.parkingLotId);
   var docRef = await db
     .collection("parkingLots")
     .doc(`${reservationItem.parkingLotId}`)
@@ -461,48 +478,49 @@ export async function modifyReservation(reservationItem, setupdateStatus) {
     });
 
     var updateSnapshot;
-    if (
-      //start is greater than or equal to current date time
-      new Date(convertDateTime(reservationItem.start)) >= new Date() &&
-      spotAvailable
-    ) {
-      updateSnapshot = await db
-        .collection("reservations")
-        .doc(reservationItem.id)
-        .update({
-          //id: reservationItem.id,
-          end: reservationItem.end,
-          owner_uid: firebase.auth().currentUser.uid,
-          parkingLotId: reservationItem.parkingLotId,
-          parkingSpotId: reservationItem.parkingSpotId,
-          start: reservationItem.start,
-        })
-        .then(() => {
-          console.log(
-            `Reservation with id ${reservationItem.id} successfully modified`
-          );
-          updateStatus = `Reservation Success: ${reservationItem.id}`;
-          Alert.alert(updateStatus);
-          setupdateStatus(updateStatus);
-        })
-        .catch((error) => {
-          console.error("Error writing document: ", error);
-        });
-    } else {
-      updateStatus = "Document was not modified";
-      setupdateStatus(updateStatus);
-    }
-  }
+      if (  //start is greater than or equal to current date time
+            (new Date(convertDateTime(reservationItem.start)) >= new Date() ) 
+            && spotAvailable ){
+              db.collection("reservations")
+              .doc(reservationItem.id)
+              .update({
+                //id: reservationItem.id,
+                end: reservationItem.end,
+                owner_uid: firebase.auth().currentUser.uid,
+                parkingLotId: reservationItem.parkingLotId, 
+                parkingSpotId: reservationItem.parkingSpotId, 
+                start: reservationItem.start,
+              });
+
+       updateSnapshot = await db.collection("reservations")
+       .doc(reservationItem.id)
+       .update({
+        //id: reservationItem.id,
+        end: reservationItem.end,
+        owner_uid: firebase.auth().currentUser.uid,
+        parkingLotId: reservationItem.parkingLotId, 
+        parkingSpotId: reservationItem.parkingSpotId, 
+        start: reservationItem.start,
+      }).then(() => {
+        console.log(`Reservation with id ${reservationItem.id} successfully modified`); 
+        updateStatus = `Reservation Success: ${reservationItem.id}`;
+        Alert.alert(updateStatus);
+        setupdateStatus(updateStatus);
+      })
+      .catch((error) => {
+        console.error("Error writing document: ", error);
+      });}else{
+            updateStatus = 'Document was not modified';
+            setupdateStatus(updateStatus);
+      }
+    }  
 }
 
-export function deleteReservation(reservationId) {
-  db.collection("reservations")
-    .doc(reservationId)
-    .delete()
-    .then(() => {
-      console.log("Document successfully deleted!");
-    })
-    .catch((error) => {
+export function deleteReservation(reservationId){
+  db.collection("reservations").doc(reservationId).delete().then(() => {
+    console.log("Document successfully deleted!");
+    Alert.alert(`Reservation Deleted: ${reservationItem.id}`);
+  }).catch((error) => {
       console.error("Error removing document: ", error);
     });
 }

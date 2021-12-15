@@ -43,6 +43,15 @@ const ReservationForm = (location) => {
             {` ${location.route.params.location.lat}, ${location.route.params.location.lng}`}
           </Text>
         </View>
+
+        <TouchableOpacity        
+          style={styles.button} 
+          underlayColor="white"
+          onPress={() =>{
+            navigation.navigate('AddReservationScreen', location.route.params.vendorParkingLotId);
+          }}>
+          <Text style={styles.buttonText}>Reserve</Text>
+        </TouchableOpacity>
         
       </View>
     </SafeAreaView>
@@ -51,4 +60,26 @@ const ReservationForm = (location) => {
 
 export default ReservationForm;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  
+  button: {
+    height: 45,
+    flexDirection: 'row',
+    backgroundColor: 'grey',
+    borderColor: 'white',
+    borderWidth: 1,
+    borderRadius: 8,
+    marginBottom: 10,
+    marginTop: 10,
+    alignSelf: 'stretch',
+    justifyContent: 'center',
+  },
+  buttonText: {
+    fontSize: 18,
+    color: 'white',
+    alignSelf: 'center',
+  },
+
+
+});
+

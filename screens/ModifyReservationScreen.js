@@ -55,7 +55,7 @@ export default function AddItem(props) {
       end: getTimeStamp(end),
       owner_uid: reservationItem.owner_uid,
       parkingLotId: reservationItem.parkingLotId,
-      parkingSpotId: spotsSelected,
+      parkingSpotId: (spotsSelected == '') ? reservationItem.parkingSpotId : spotsSelected, 
       start: getTimeStamp(start),
     });
     try {

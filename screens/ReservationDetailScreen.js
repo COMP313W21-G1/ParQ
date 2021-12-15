@@ -5,6 +5,7 @@ import {
   SafeAreaView,
   Button,
   TouchableOpacity,
+  Alert
 } from "react-native";
 
 import { Icon } from "react-native-elements";

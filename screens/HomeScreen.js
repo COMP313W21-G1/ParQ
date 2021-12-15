@@ -15,18 +15,21 @@ import tw from "tailwind-react-native-classnames";
 import NavOptions from "../components/NavOptions";
 import { GooglePlacesAutocomplete } from "react-native-google-places-autocomplete";
 import { GOOGLE_MAPS_APIKEY } from "@env";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 //import { setDestination, setOrigin } from "../slices/navSlice";
 import { setOrigin } from "../slices/navSlice";
 import NavFavourites from "../components/NavFavourites";
 import { firebase } from "../firebase";
 import * as Location from "expo-location";
+import { selectVendor } from "../slices/vendorSlice";
 
 const HomeScreen = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
+
+  const vendor = useSelector(selectVendor);
 
   useEffect(() => {
     (async () => {
@@ -79,7 +82,8 @@ const HomeScreen = () => {
               source={require("../assets/logo.png")}
             />
           </TouchableOpacity>
-          <TouchableOpacity
+          <>
+          {!vendor && <TouchableOpacity
             disabled={!location}
             onPress={() => {
               if (!location) {
@@ -108,8 +112,13 @@ const HomeScreen = () => {
               size={24}
             />
           </TouchableOpacity>
+          }
+          </>
         </View>
-        <View>
+        
+        <View style={tw`${vendor ? "m-6" : ""}`}>
+          <>
+          {!vendor &&
           <GooglePlacesAutocomplete
             placeholder="Get Parking..."
             styles={{
@@ -146,6 +155,7 @@ const HomeScreen = () => {
             nearbyPlacesAPI="GooglePlacesSearch"
             debounce={400}
           />
+        }</>
         </View>
 
         <NavOptions style={tw`h-1/3 mb-0`} />
