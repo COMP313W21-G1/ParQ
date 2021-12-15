@@ -8,6 +8,7 @@ import SignupScreen from "./screens/SignupScreen";
 import ProfileScreen from "./screens/ProfileScreen";
 import ReservationScreen from "./screens/ReservationScreen";
 import ReservationDetailScreen from "./screens/ReservationDetailScreen";
+import AddReservationScreen from "./screens/AddReservationScreen";
 import ModifyReservationScreen from "./screens/ModifyReservationScreen";
 import AddLotScreen from "./screens/AddLotScreen";
 
@@ -26,6 +27,7 @@ export const SignedInStack = () => (
       <Stack.Screen name="MapScreen" component={MapScreen} />
       <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
       <Stack.Screen name="ReservationScreen" component={ReservationScreen} />
+      <Stack.Screen name="AddReservationScreen" component={AddReservationScreen} />
       <Stack.Screen name="AddLotScreen" component={AddLotScreen} />
       <Stack.Screen
         name="ReservationDetailScreen"

@@ -16,30 +16,31 @@
 
   
   import DateTimePicker from '@react-native-community/datetimepicker';
-  import {  addReservation, convertDateTime, getTimeStamp, getParkingSpots } from '../firebase';
+  import {  firebase, addReservation, convertDateTime, getTimeStamp, getParkingSpots } from '../firebase';
   import { useIsFocused } from '@react-navigation/native';
   
   
   export default function AddItem(props) {
-    const { vendorParkingLotId } = props.route.params;
+    //const { vendorParkingLotId } = props.route.params;
+    
       //add 30 minutes to date
     var minutesToAdd=30;
     const currentDate = new Date();
-    var startTimestamp = getTimeStamp(currentDate);
+    var endTimestamp = getTimeStamp(new Date(currentDate.getTime() + 5*60000));   
     var endTimestamp = getTimeStamp(new Date(currentDate.getTime() + minutesToAdd*60000));   
     const reservationItem =  {
         end: endTimestamp,
         owner_uid: `${firebase.auth().currentUser.uid}`,
-        parkingLotId: vendorParkingLotId,
+        parkingLotId: props.route.params,
         parkingSpotId: '',
         start: startTimestamp,
       };
     const [res, setRes] = useState(reservationItem);
     const [start, setStart] = useState(convertDateTime(reservationItem.start));
     const [end, setEnd] = useState(convertDateTime(reservationItem.end));
-    const [spotsList, setSpotsList] = useState([]);
-    const [spotsSelected, setSpotSelected] = useState();
-    const isFocused = useIsFocused();
+    const [spotsList, setSpotsList] = useState([]); 
+    const [spotsSelected, setSpotSelected] = useState('');
+    const isFocused = useIsFocused(true);
 
   
     function handleChangeStart(startTxt) {
@@ -53,12 +54,13 @@
     async function handleSubmit() {
         
       console.log('submit button pressed...');
+      console.log((spotsSelected == '') ? spotsList[0] : spotsSelected);
        await setRes({ 
          // id: reservationItem.id,
           end: getTimeStamp(end),
           owner_uid: reservationItem.owner_uid, 
           parkingLotId: reservationItem.parkingLotId, 
-          parkingSpotId: spotsSelected, 
+          parkingSpotId: (spotsSelected == '') ? spotsList[0] : spotsSelected, 
           start: getTimeStamp(start),
       }); 
       try{
@@ -129,7 +131,8 @@
         try {      
             setSpotSelected(reservationItem.parkingSpotId)  ;
             getParkingSpots(reservationItem, setSpotsList);
-            console.log(spotsList); 
+            //console.log(spotsList); 
+            
         } catch (error) {
           console.log(error.message);
         } 
@@ -220,7 +223,7 @@
           style={styles.button} 
           underlayColor="white"
           onPress={handleSubmit}>
-          <Text style={styles.buttonText}>Update</Text>
+          <Text style={styles.buttonText}>Confirm Reservation</Text>
         </TouchableHighlight>
       </View>
     );

@@ -291,7 +291,7 @@ export async function addReservation(reservationItem) {
       var isBetweenEndA = false;
       var isBetweenStartB = false;
       var isBetweenEndB = false;
-
+     
       isBetweenStartA =
         new Date(convertDateTime(reservationItem.start)) >=
           new Date(convertDateTime(doc.data().start)) &&
@@ -327,10 +327,10 @@ export async function addReservation(reservationItem) {
           isBetweenStartB ||
           isBetweenEndB) &&
         spotAvailable
-      ) {
+      ) { 
         spotAvailable = false;
         console.log("Oops, the spot is taken for that time ");
-      }
+      }console.log(new Date(convertDateTime(reservationItem.start)) >= new Date());
     });
     //console.log(spotAvailable);
     if (
@@ -363,6 +363,8 @@ export async function addReservation(reservationItem) {
 export async function getParkingSpots(reservationItem, setSpotsList) {
   var allSpots = [];
   var allSpotIds = [];
+
+  //console.log('parking lot: ', reservationItem.parkingLotId);
   var docRef = await db
     .collection("parkingLots")
     .doc(`${reservationItem.parkingLotId}`)

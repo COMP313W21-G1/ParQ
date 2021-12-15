@@ -81,6 +81,7 @@ const ParkingDetailsCard = (location) => {
               address: location.route.params.address,
               location: loc,
               description: location.route.params.description,
+              vendorParkingLotId: location.route.params.vendorParkingLotId,
             });
           }}
           style={tw`flex-col justify-evenly w-36 h-12 m-1 rounded-full  ${
