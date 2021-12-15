@@ -7,8 +7,8 @@ import { selectOrigin } from "../slices/navSlice";
 import { GOOGLE_MAPS_APIKEY } from "@env";
 import { Icon } from "react-native-elements/dist/icons/Icon";
 import { useNavigation } from "@react-navigation/core";
-import { firebase, db, getVendors } from "../firebase";
-import { setSpot } from "../slices/spotSlice";
+import { firebase, db, getVendors, getVendorsFiltered } from "../firebase";
+import { selectSpot, setSpot } from "../slices/spotSlice";
 
 const Map = () => {
   const origin = useSelector(selectOrigin);
@@ -18,6 +18,7 @@ const Map = () => {
   const mapRef = useRef(null);
   const dispatch = useDispatch();
   const [vendors, setVendors] = useState([]);
+  const spot = useSelector(selectSpot);
 
   useEffect(() => {
     //   //if (!origin || !destination) return;
@@ -33,6 +34,7 @@ const Map = () => {
             let rawDesc = [];
             element.types.forEach((value) => rawDesc.push(value));
             //console.log(rawDesc);
+            //console.log("999999999", element)
             let result = {
               location: element.geometry.location,
               name: element.name,
@@ -57,11 +59,18 @@ const Map = () => {
 
   useEffect(() => {
     try {
-      getVendors(setVendors);
+      getVendorsFiltered(setVendors, origin);
     } catch (error) {
       console.log(error.message);
     }
-  }, []);
+  }, [origin, GOOGLE_MAPS_APIKEY]);
+
+  useEffect(() => {
+    mapRef.current.fitToSuppliedMarkers([spot?.name], {
+      edgePadding: { top: 5, right: 5, bottom: 5, left: 5 },
+      animated: true,
+    });
+  }, [spot])
 
   return (
     <MapView
@@ -85,7 +94,7 @@ const Map = () => {
           latitudeDelta: 0.01,
           longitudeDelta: 0.01,
         }}
-        radius={1000}
+        radius={1200}
         strokeWidth={1}
         strokeColor={"#1a66ff"}
         fillColor={"rgba(230,238,255,0.5)"}
@@ -93,6 +102,7 @@ const Map = () => {
 
       {origin?.location && (
         <Marker
+          identifier="Origin"
           mapRef={mapRef}
           coordinate={{
             latitude: origin.location.lat,
@@ -130,6 +140,7 @@ const Map = () => {
         //console.log(result);
         return (
           <Marker
+            identifier={result.name}
             mapRef={mapRef}
             key={index}
             coordinate={{
@@ -167,10 +178,11 @@ const Map = () => {
         //console.log(result.totalParkingSpots);
         return (
           <Marker
+            identifier={result.name}
             mapRef={mapRef}
             key={index}
-            image={require("../assets/logo.png")}
-            style={{ maxWidth: 5 }}
+            image={require("../assets/logo-marker.png")}
+            //style={{ maxWidth: 5 }}
             coordinate={{
               latitude: result.latitude,
               longitude: result.longitude,

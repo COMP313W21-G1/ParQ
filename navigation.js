@@ -3,13 +3,13 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
 import HomeScreen from "./screens/HomeScreen";
 import LoginScreen from "./screens/LoginScreen";
-import MapScreen from './screens/MapScreen';
+import MapScreen from "./screens/MapScreen";
 import SignupScreen from "./screens/SignupScreen";
 import ProfileScreen from "./screens/ProfileScreen";
 import ReservationScreen from "./screens/ReservationScreen";
 import ReservationDetailScreen from "./screens/ReservationDetailScreen";
 import ModifyReservationScreen from "./screens/ModifyReservationScreen";
-import AddReservationScreen from "./screens/AddReservationScreen";
+import AddLotScreen from "./screens/AddLotScreen";
 
 const Stack = createStackNavigator();
 const screenOptions = {
@@ -25,10 +25,17 @@ export const SignedInStack = () => (
       <Stack.Screen name="HomeScreen" component={HomeScreen} />
       <Stack.Screen name="MapScreen" component={MapScreen} />
       <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
-      <Stack.Screen name="ReservationScreen" component={ReservationScreen} />      
-      <Stack.Screen name="ReservationDetailScreen" component={ReservationDetailScreen} />
-      <Stack.Screen name="ModifyReservationScreen" component={ModifyReservationScreen} />
-      <Stack.Screen name="AddReservationScreen" component={AddReservationScreen} />
+      <Stack.Screen name="ReservationScreen" component={ReservationScreen} />
+      <Stack.Screen name="AddLotScreen" component={AddLotScreen} />
+      <Stack.Screen
+        name="ReservationDetailScreen"
+        component={ReservationDetailScreen}
+      />
+      <Stack.Screen
+        name="ModifyReservationScreen"
+        component={ModifyReservationScreen}
+      />
+      <Stack.Screen name="SignupScreen" component={SignupScreen} />
     </Stack.Navigator>
   </NavigationContainer>
 );
@@ -43,4 +50,4 @@ export const SignedOutStack = () => (
       <Stack.Screen name="SignupScreen" component={SignupScreen} />
     </Stack.Navigator>
   </NavigationContainer>
-)
+);

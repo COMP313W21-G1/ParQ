@@ -25,6 +25,12 @@ const data = [
     image: "https://www.gardeningknowhow.com/wp-content/uploads/2021/07/sulfur-cosmos-mexican-aster-flowers.jpg",
     screen: "ProfileScreen", // change in future
   },
+  {
+    id: "012",
+    title: "Add  vendor parking Lot",
+    image: "https://www.gardeningknowhow.com/wp-content/uploads/2021/07/sulfur-cosmos-mexican-aster-flowers.jpg",
+    screen: "AddLotScreen", // change in future
+  },
 ]
 
 const NavOptions = () => {
@@ -40,9 +46,9 @@ const NavOptions = () => {
         <TouchableOpacity
           onPress={() => navigation.navigate(item.screen)}
           style={tw`p-2 pl-6 pb-8 pt-4 bg-gray-200 m-2 w-40`}
-          disabled={!origin}
+          disabled={item.screen === "MapScreen" ? !origin : false}
         >
-          <View style={tw`${!origin && "opacity-20"}`}>
+          <View style={tw`${(item.screen === "MapScreen" ? !origin : false) && "opacity-20"}`}>
             <Image 
               style={{ width: 120, height: 120, resizeMode: "contain" }}
               source={{uri: item.image}}
