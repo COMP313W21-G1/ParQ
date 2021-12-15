@@ -26,7 +26,7 @@
       //add 30 minutes to date
     var minutesToAdd=30;
     const currentDate = new Date();
-    var endTimestamp = getTimeStamp(new Date(currentDate.getTime() + 5*60000));   
+    var startTimestamp = getTimeStamp(currentDate);
     var endTimestamp = getTimeStamp(new Date(currentDate.getTime() + minutesToAdd*60000));   
     const reservationItem =  {
         end: endTimestamp,

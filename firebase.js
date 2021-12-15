@@ -330,12 +330,14 @@ export async function addReservation(reservationItem) {
       ) { 
         spotAvailable = false;
         console.log("Oops, the spot is taken for that time ");
-      }console.log(new Date(convertDateTime(reservationItem.start)) >= new Date());
+      }
     });
     //console.log(spotAvailable);
+
+    const currentDate = new Date();
     if (
-      //start is greater than or equal to current date time
-      new Date(convertDateTime(reservationItem.start)) >= new Date() &&
+      //start is greater than or equal to current date time minus 5 min
+      new Date(convertDateTime(reservationItem.start)) >= new Date(currentDate.getTime() - 5*60000) &&
       spotAvailable
     ) {
       console.log("Great, the spot is available for that time ");
