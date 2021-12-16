@@ -18,7 +18,9 @@ import React, { useEffect, useState } from "react";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
 
 const ReservationItem = ({ reservationItem, nav }) => (
-  <SafeAreaView style={tw`px-4 pt-3 flex-col justify-between w-full`}>
+  <SafeAreaView
+    style={tw`px-4 pt-3 flex-col justify-between w-full border-4 rounded-lg border-gray-400 my-1`}
+  >
     <View style={tw`flex-row justify-evenly w-9/12 m-auto px-8 pb-3`}>
       <Text style={tw`text-blue-600 font-bold`}>
         Res ID: {reservationItem.id}
@@ -45,14 +47,14 @@ const ReservationItem = ({ reservationItem, nav }) => (
       </Text>
     </View>
 
-    <View style={tw`w-1/4 m-auto py-1`}>
+    <SafeAreaView style={tw`w-1/4 m-auto py-1`}>
       <Button
         title="Details"
         onPress={() => {
           nav.navigate("ReservationDetailScreen", { reservationItem });
         }}
       />
-    </View>
+    </SafeAreaView>
   </SafeAreaView>
 );
 
@@ -60,6 +62,7 @@ const ReservationScreen = (props) => {
   const isFocused = useIsFocused();
   const [reservationsList, setReservationsList] = useState([]);
   const navigation = useNavigation();
+  const [status, setStatus] = useState({});
   //const { update } = props.route.params;
 
   fetchReservationListData = async () => {
@@ -73,11 +76,17 @@ const ReservationScreen = (props) => {
 
   useEffect(() => {
     isFocused && fetchReservationListData();
+
+    unsubscribe();
+    return () => {
+      setStatus({});
+    };
   }, [isFocused]);
+  const unsubscribe = () => setStatus({ status: "Inactive" });
 
   return reservationsList.length > 0 ? (
     //if spots are available, add them to the view
-    <SafeAreaView style={tw`mx-auto pt-10`}>
+    <SafeAreaView style={tw`mx-auto pt-10 m-2`}>
       <TouchableOpacity
         onPress={() => navigation.navigate("HomeScreen")}
         style={tw`bg-gray-100 absolute top-8 left-4 z-50 p-2 rounded-full shadow-lg`}
@@ -91,7 +100,7 @@ const ReservationScreen = (props) => {
       <FlatList
         //extraData={reservationsList}
         data={reservationsList}
-        style={tw`border-4 rounded-lg border-gray-400  `}
+        style={tw`  `}
         keyExtractor={(item) => item.id}
         ItemSeparatorComponent={() => (
           <View style={[tw`bg-gray-200`, { height: 1 }]} />
@@ -155,96 +164,3 @@ const styles = StyleSheet.create({
 });
 
 export default ReservationScreen;
-
-/** 
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet,  Button,  } from 'react-native';
-import tw from 'tailwind-react-native-classnames';
-
-import {  getReservations, convertDateTime } from '../firebase';
-
-
-
-export default function ReservationScreen(props) {
-  const [reservationsList, setReservationsList] = useState([]);
-
-  useEffect(() => {
-    getReservations(setReservationsList); 
-  }, []);
-
-  return (
-    <View style={styles.container}>
-      {(reservationsList.length > 0) ? 
-      <View>
-        <Text >{reservationsList[0].id}</Text>
-        <ItemList items={reservationsList} nav={props.navigation}/>
-      </View>
-      : 
-        //if no spots are  booked, display a message 
-        <View style={styles.container}>
-          <Text >No Reservations Found! </Text>
-          <Text >Add a new reservation from the map screen</Text>     
-        </View>}
-    </View>
-  );
-}
-
-
-export function ItemList({ items , nav}){
-  return (
-    <View style={styles.itemsList}>
-      {items.map((item) => {
-        return (
-          <View key={item.id}> 
-            <Text style={styles.itemtext}>{item.id}</Text>
-            <ReservationItem                        
-              key = {item.id}
-              id = {item.id}
-              reservationItem = {item}
-              nav = {nav}   
-            />  
-          </View>
-        );
-      })}
-    </View>
-  );
-}
-
-const ReservationItem = ({ reservationItem , nav}) => (
-
-  <View> 
-      <View style={tw`flex-row`}>
-        <View style={tw`justify-start`}>
-        <Text style={tw`text-blue-600`}>Res ID: {reservationItem.id}</Text>
-          <Text style={tw`text-gray-500`}>Start Time: {convertDateTime(reservationItem.start)}</Text>
-          <Text style={tw`text-gray-500`}>End time: {convertDateTime(reservationItem.end)}</Text>
-          <Text style={tw`text-gray-500`}>Address: {reservationItem.spotInfo.parkingAddress}</Text>
-        </View>  
-        <View>
-          <Button
-            title="Details"
-            onPress={() =>{ nav.navigate('ReservationDetailScreen', {reservationItem})}}
-          />
-        </View>
-      </View>   
-  </View> 
-);  
-
-const styles = StyleSheet.create({
-  itemsList: { 
-    flex: 1,
-    flexDirection: 'column',
-    justifyContent: 'space-around',
-  },
-  itemtext: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },      
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#ebebeb',
-  },
-});*/

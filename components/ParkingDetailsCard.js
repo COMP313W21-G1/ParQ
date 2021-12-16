@@ -21,17 +21,6 @@ const ParkingDetailsCard = (location) => {
   const [spot, setSpot] = useState([]);
   const parking = useSelector(selectSpot);
   const [vendors, setVendors] = useState([]);
-  //console.log(location);
-  // useEffect(() => {
-  //   try {
-  //     getVendors(setVendors);
-  //     getSpot(setSpot);
-  //   } catch (error) {
-  //     //
-  //   }
-  // }, []);
-
-  //console.log("333333333333333", JSON.parse(location?.route.params?.description))
 
   return (
     <SafeAreaView
@@ -55,9 +44,9 @@ const ParkingDetailsCard = (location) => {
 
           <Text style={tw`text-center p-1 text-base`}>
             Description:{" "}
-            {location.route.params.vendor ? location.route.params.description : 
-            "Google Maps - Parking Establishment"
-            }
+            {location.route.params.vendor
+              ? location.route.params.description
+              : "Google Maps - Parking Establishment"}
           </Text>
           <Text style={tw`text-center p-1 text-base`}>
             Coordinates:
