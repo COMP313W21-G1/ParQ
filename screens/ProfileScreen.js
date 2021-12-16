@@ -18,6 +18,7 @@ import { firebase, db, getUser } from "../firebase";
 import { Icon } from "react-native-elements";
 import NavFavourites from "../components/NavFavourites";
 import UserForm from "../components/UserForm";
+import KeyboardAvoidingWrapper from "../components/KeyboardAvoidingWrapper";
 
 const ProfileScreen = () => {
   const navigation = useNavigation();
@@ -37,6 +38,7 @@ const ProfileScreen = () => {
   }, []);
 
   return editing ? (
+    <KeyboardAvoidingWrapper>
     <SafeAreaView style={tw` h-full flex-1 flex-col`}>
       <TouchableOpacity
         onPress={cancelEdit}
@@ -44,8 +46,11 @@ const ProfileScreen = () => {
       >
         <Icon name="cancel" type="fontawesome" color="red" size={30} />
       </TouchableOpacity>
+      <View>
       <UserForm person={user} style={tw`justify-end`} />
+      </View>
     </SafeAreaView>
+    </KeyboardAvoidingWrapper>
   ) : (
     <SafeAreaView style={tw`h-full flex-1 flex-col`}>
       <TouchableOpacity
@@ -57,14 +62,14 @@ const ProfileScreen = () => {
       <View style={tw`p-5 flex flex-row justify-between h-1/4 pb-1 mb-2`}>
         <View style={tw`flex-1 flex-wrap w-1/3`}>
           <Text style={tw` pt-16 text-3xl font-bold`}>
-            {user.firstname} {user.lastname}
+            {user?.firstname} {user?.lastname}
           </Text>
-          <Text style={tw`text-lg`}>{user.email}</Text>
+          <Text style={tw`text-lg`}>{user?.email}</Text>
         </View>
         <Image
           style={tw`w-1/2 h-full rounded-full`}
           source={{
-            uri: user.profile_picture,
+            uri: user?.profile_picture,
           }}
         />
       </View>
@@ -74,23 +79,13 @@ const ProfileScreen = () => {
       <View style={tw`flex-initial m-0 p-0 h-1/3`}>
         <View style={tw`flex-row justify-around m-2`}>
           <Text style={tw`text-lg font-bold`}>Phone:</Text>
-          <Text style={tw`text-lg`}>{user.phone}</Text>
+          <Text style={tw`text-lg`}>{user?.phone}</Text>
         </View>
         <View style={tw`flex-row justify-around`}>
           <Text style={tw`text-lg font-bold`}>Address:</Text>
-          <Text style={tw`text-lg`}>{user.address}</Text>
+          <Text style={tw`text-lg`}>{user?.address}</Text>
         </View>
-        <View style={tw`flex-row justify-around`}>
-          <Text style={tw`text-lg`}></Text>
-          <Text style={tw`text-lg`}>
-            {user.city}, {user.province}
-          </Text>
-        </View>
-        <View style={tw`flex-row justify-around`}>
-          <Text style={tw`text-lg`}></Text>
-          <Text style={tw`text-lg`}>{user.postalcode}</Text>
-        </View>
-        <View style={tw`flex-row justify-start`}>
+        <View style={tw`flex-row justify-start m-5`}>
           <TouchableOpacity
             onPress={() => {
               Alert.alert("Logout ?", "Are You sure you want to Logout?", [

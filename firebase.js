@@ -148,12 +148,8 @@ export async function getUser(userRetrieved) {
           email: doc.data().email,
           firstname: doc.data().firstname,
           lastname: doc.data().lastname,
-          feePerHour: doc.data().owner_uid,
           phone: doc.data().phone,
           type: doc.data().type,
-          city: doc.data().city,
-          province: doc.data().province,
-          postalcode: doc.data().postalcode,
           profile_picture: doc.data().profile_picture,
           owner_uid: doc.data().owner_uid,
         };
