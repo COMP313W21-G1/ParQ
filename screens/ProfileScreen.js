@@ -52,7 +52,7 @@ const ProfileScreen = () => {
     </SafeAreaView>
     </KeyboardAvoidingWrapper>
   ) : (
-    <SafeAreaView style={tw`h-full flex-1 flex-col`}>
+    <SafeAreaView style={tw`h-full flex-1 flex-col pt-10`}>
       <TouchableOpacity
         onPress={() => navigation.navigate("HomeScreen")}
         style={tw`bg-gray-100 absolute top-8 left-5 z-50 p-2 rounded-full shadow-lg`}
