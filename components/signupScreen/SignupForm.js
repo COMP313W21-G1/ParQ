@@ -114,7 +114,7 @@ const SignupForm = () => {
         validationSchema={SignupFormSchema}
         validateOnMount={true}
       >
-        {({ handleChange, handleBlur, handleSubmit, values, isValid }) => (
+        {({ setFieldValue, handleChange, handleBlur, handleSubmit, values, isValid }) => (
           <>
             <View
               style={[
@@ -134,7 +134,7 @@ const SignupForm = () => {
                 // style={styles.dropdown_2}
                 // textStyle={styles.dropdown_2_text}
                 dropdownStyle={styles.dropdown}
-                options={['Driver', 'Vendor']}
+                options={['driver', 'vendor']}
                 onSelect={(index, value) => {
                   values.type = value;
                 }}
@@ -270,44 +270,15 @@ const SignupForm = () => {
                 },
               ]}
             >
-              {/*
               <GooglePlacesAutocomplete
-
-                styles={{
-                  container: {
-                    flex: 0,
-                  },
-                  textInput: {
-                    fontSize: 18,
-                  },
-                }}
-                onPress={(data, details = null) => {
-                  dispatch(setOrigin({
-                    location: details.geometry.location,
-                    description: data.description
-                  }));
-
-                  dispatch(setDestination(null));
-                }}
-                fetchDetails={true}
-                returnKeyType={"search"}
-                enablePoweredByContainer={false}
-                minLength={2}
-                query={{
-                  key: GOOGLE_MAPS_APIKEY,
-                  language: "en"
-                }}
-                nearbyPlacesAPI="GooglePlacesSearch"
-                debounce={400}
-              />*/}
-
-               {/*  <GooglePlacesAutocomplete
                 placeholderTextColor="#444"
                 placeholder="Home Address"
                 autoCapitalize="none"
-                onChangeText={handleChange("address")}
-                onBlur={handleBlur("address")}
-                value={values.address}
+                textInputProps={{
+                  // Any props put in here will go directly onto the TextInput
+                  value: values?.address,
+                  onChangeText: handleChange("address"),
+                  }}
                 //noScroll={true}
                 scrollEnabled={true}
                 query={{
@@ -315,10 +286,7 @@ const SignupForm = () => {
                   language: "en", // language of the results
                 }}
                 onPress={(data, details = null) => {
-                  console.log(details);
-                  console.log(data);
-                  console.log("data.description",data.description.split(','));
-
+                  setFieldValue("address", data.description ? data.description : "");
                 }}
                 onFail={(error) => console.error(error)}
                 listViewDisplayed="auto"
@@ -347,16 +315,16 @@ const SignupForm = () => {
                     scrollEnabled: false,
                   },
                 }}
-              />*/}
+              />
 
-           <TextInput
+           {/* <TextInput
                 placeholderTextColor="#444"
                 placeholder="Home Address"
                 autoCapitalize="none"
                 onChangeText={handleChange("address")}
                 onBlur={handleBlur("address")}
                 value={values.address}
-              />
+              /> */}
             </View>
 
             <View
