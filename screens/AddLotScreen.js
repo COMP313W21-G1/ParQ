@@ -5,6 +5,7 @@ import {
   TextInput,
   StyleSheet,
   Pressable,
+  Button,
   TouchableOpacity,
   SafeAreaView,
   Alert,
@@ -17,6 +18,7 @@ import { Formik } from "formik";
 import * as Yup from "yup";
 import Validator from "email-validator";
 import { useNavigation } from "@react-navigation/core";
+import NavOptions from "../components/NavOptions";
 
 //import phone input
 import PhoneInput from "react-native-phone-number-input";
@@ -25,6 +27,7 @@ import PhoneInput from "react-native-phone-number-input";
 // icon
 import { Octicons, Ionicons } from "@expo/vector-icons";
 import { FlatList } from "react-native-gesture-handler";
+import { color } from "react-native-reanimated";
 
 const AddLotScreen = () => {
   //phone use cases
@@ -318,16 +321,37 @@ const AddLotScreen = () => {
               titleSize={20}
               style={[
                 styles.button(isValid),
-                tw`w-9/12 rounded-lg m-auto mt-2`,
+                tw`w-9/12 rounded-lg m-auto mt-0`,
               ]}
               onPress={handleSubmit}
               disabled={!isValid}
             >
               <Text style={styles.buttonText}>Add Parking Lot</Text>
             </Pressable>
+
+            <Pressable
+              titleSize={20}
+              style={[
+                styles.button(isValid),
+                tw`w-9/12 rounded-lg m-auto mt-10`,
+              ]}
+              onPress={() => navigation.navigate("HomeScreen")}
+            >
+              <Text style={styles.buttonText}>Back to home</Text>
+            </Pressable>
+            {/* <Button
+              titleSize={20}
+              // onPress={navigation.navigate("HomeScreen")}
+              onPress={() => navigation.navigate("HomeScreen")}
+              title="Back to home page"
+            /> */}
+
+            
+            
           </>
         )}
       </Formik>
+      
     </SafeAreaView>
   );
 };
