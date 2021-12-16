@@ -247,8 +247,6 @@ const UserForm = (person, cancelEdit) => {
                 autoCapitalize="none"
                 textInputProps={{
                   // Any props put in here will go directly onto the TextInput
-                  value: values?.address,
-                  onChangeText: handleChange("address")
                   }}
                 //noScroll={true}
                 scrollEnabled={true}

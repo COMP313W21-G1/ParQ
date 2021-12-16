@@ -52,7 +52,7 @@ const ProfileScreen = () => {
     </SafeAreaView>
     </KeyboardAvoidingWrapper>
   ) : (
-    <SafeAreaView style={tw`h-full flex-1 flex-col`}>
+    <SafeAreaView style={tw`h-full flex-1 flex-col pt-10`}>
       <TouchableOpacity
         onPress={() => navigation.navigate("HomeScreen")}
         style={tw`bg-gray-100 absolute top-8 left-5 z-50 p-2 rounded-full shadow-lg`}
@@ -64,7 +64,6 @@ const ProfileScreen = () => {
           <Text style={tw` pt-16 text-3xl font-bold`}>
             {user?.firstname} {user?.lastname}
           </Text>
-          <Text style={tw`text-lg`}>{user?.email}</Text>
         </View>
         <Image
           style={tw`w-1/2 h-full rounded-full`}
@@ -77,13 +76,24 @@ const ProfileScreen = () => {
         style={[tw`bg-black mx-3 mt-1 flex-initial flex-shrink`, { height: 1 }]}
       />
       <View style={tw`flex-initial m-0 p-0 h-1/3`}>
+      
         <View style={tw`flex-row justify-around m-2`}>
-          <Text style={tw`text-lg font-bold`}>Phone:</Text>
+        <Text numberOfLines={1} ellipsizeMode='tail' style={tw`text-lg`}>
+          <Text style={tw`text-lg font-bold`}>Phone:{" "}</Text>
           <Text style={tw`text-lg`}>{user?.phone}</Text>
+          </Text>
         </View>
         <View style={tw`flex-row justify-around`}>
-          <Text style={tw`text-lg font-bold`}>Address:</Text>
+        <Text numberOfLines={1} ellipsizeMode='tail' style={tw`text-lg`}>
+          <Text style={tw`text-lg font-bold`}>Address:{" "}</Text>
           <Text style={tw`text-lg`}>{user?.address}</Text>
+          </Text>
+        </View>
+        <View style={tw`flex-row justify-around m-2`}>
+        <Text numberOfLines={1} ellipsizeMode='tail' style={tw`text-lg`}>
+          <Text style={tw`text-lg font-bold`}>Email:{" "}</Text>
+          <Text style={tw`text-lg`}>{user?.email}</Text>
+          </Text>
         </View>
         <View style={tw`flex-row justify-start m-5`}>
           <TouchableOpacity
