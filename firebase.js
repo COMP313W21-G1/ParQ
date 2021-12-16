@@ -350,6 +350,14 @@ export async function addReservation(reservationItem) {
       spotAvailable
     ) {
       console.log("Great, the spot is available for that time ");
+      db.collection("reservations")
+      .add({
+        end: reservationItem.end,
+        owner_uid: firebase.auth().currentUser.uid,
+        parkingLotId: reservationItem.parkingLotId,
+        parkingSpotId: reservationItem.parkingSpotId,
+        start: reservationItem.start,
+      });
       /**  */
       db.collection("reservations")
         .add({
