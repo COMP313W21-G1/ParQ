@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from "react";
 //import DropDownPicker from 'react-native-dropdown-picker';
 import SelectDropdown from "react-native-select-dropdown";
+import { Icon } from "react-native-elements";
+import tw from "tailwind-react-native-classnames";
 
 import {
   View,
   Text,
   TouchableHighlight,
+  TouchableOpacity,
   StyleSheet,
   SafeAreaView,
   Alert,
@@ -21,7 +24,7 @@ import {
   getTimeStamp,
   getParkingSpots,
 } from "../firebase";
-import { useIsFocused } from "@react-navigation/native";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
 
 export default function AddItem(props) {
   //const { vendorParkingLotId } = props.route.params;
@@ -46,6 +49,7 @@ export default function AddItem(props) {
   const [spotsList, setSpotsList] = useState([]);
   const [spotsSelected, setSpotSelected] = useState("");
   const isFocused = useIsFocused(true);
+  const navigation = useNavigation();
 
   function handleChangeStart(startTxt) {
     setStart(startTxt);
@@ -141,69 +145,70 @@ export default function AddItem(props) {
   }, [isFocused]);
 
   return (
-    <SafeAreaView style={styles.main}>
-      <Text style={styles.title}>Add New Reservation</Text>
+    <SafeAreaView style={[styles.main, tw`h-full justify-center`]}>
+      <TouchableOpacity
+        onPress={() => navigation.goBack()}
+        style={tw`absolute bg-white top-10 left-3 z-50 p-2 rounded-full`}
+      >
+        <Icon name="chevron-left" type="fontawesome" size={30} />
+      </TouchableOpacity>
+      <Text style={[styles.title, tw`p-0 mt-0 text-3xl font-bold`]}>
+        Create Reservation
+      </Text>
 
-      <View>
-        <Text>Select A Parking Spot</Text>
-        <SelectDropdown
-          style={styles.button}
-          //style={styles.itemInput}
-          containerStyle={styles.shadow}
-          data={spotsList}
-          defaultButtonText={"Select a parking spot"}
-          defaultValue={spotsSelected}
-          onSelect={(selectedItem, index) => {
-            console.log(selectedItem, index);
-            setSpotSelected(selectedItem);
-          }}
-          buttonTextAfterSelection={(selectedItem, index) => {
-            // text represented after item is selected
-            // if data array is an array of objects then return selectedItem.property to render after item is selected
-            return selectedItem;
-          }}
-          rowTextForSelection={(item, index) => {
-            // text represented for each item in dropdown
-            // if data array is an array of objects then return item.property to represent item in dropdown
-            return item;
-          }}
-        />
-      </View>
+      <SelectDropdown
+        buttonStyle={tw`w-full rounded-lg`}
+        rowStyle={[styles.shadow, tw`text-center border-blue-900 border-2`]}
+        data={spotsList}
+        defaultButtonText={"Select a Parkin spot"}
+        defaultValue={spotsSelected}
+        onSelect={(selectedItem, index) => {
+          console.log(selectedItem, index);
+          setSpotSelected(selectedItem);
+        }}
+        buttonTextAfterSelection={(selectedItem, index) => {
+          // text represented after item is selected
+          // if data array is an array of objects then return selectedItem.property to render after item is selected
+          return selectedItem;
+        }}
+        rowTextForSelection={(item, index) => {
+          // text represented for each item in dropdown
+          // if data array is an array of objects then return item.property to represent item in dropdown
+          return item;
+        }}
+      />
 
-      <View>
-        <Text>Start</Text>
-
-        <View>
-          <View>
-            <Button
-              onPress={showDatepickerStart}
-              title="Choose a start date!"
-            />
-          </View>
-          <View>
-            <Button
-              onPress={showTimepickerStart}
-              title="Choose a start Time!"
-            />
-          </View>
-          {showStart && (
-            <DateTimePicker
-              testID="dateTimePicker"
-              value={startDate}
-              mode={modeStart}
-              is24Hour={true}
-              display="default"
-              onChange={onChangeStart}
-            />
-          )}
+      <View style={[styles.tdivide, tw`flex-col w-full mt-5 py-5 bg-blue-400`]}>
+        <Text style={tw`text-center text-xl font-bold`}>Start</Text>
+        <View style={tw`flex-row justify-around mb-2`}>
+          <Button onPress={showDatepickerStart} title="Choose a start date!" />
+          <Button onPress={showTimepickerStart} title="Choose a start Time!" />
         </View>
+        {showStart && (
+          <DateTimePicker
+            testID="dateTimePicker"
+            value={startDate}
+            mode={modeStart}
+            is24Hour={true}
+            display="default"
+            onChange={onChangeStart}
+          />
+        )}
       </View>
 
-      <View>
-        <Text>End</Text>
-        <View>
+      <View
+        style={[
+          [styles.bdivide, tw`flex-col w-full  mb-2 mt-1 py-4 bg-blue-400`],
+        ]}
+      >
+        <Text style={tw`text-center text-xl font-bold`}>End</Text>
+        <View style={tw`flex-row justify-around mb-2`}>
           <View>
-            <Button onPress={showDatepickerEnd} title="Choose an end date!" />
+            <Button
+              style={tw`bg-blue-700`}
+              onPress={showDatepickerEnd}
+              title="Choose an end date!"
+            />
           </View>
           <View>
             <Button onPress={showTimepickerEnd} title="Choose and end time!" />
@@ -221,13 +226,15 @@ export default function AddItem(props) {
         </View>
       </View>
 
-      <TouchableHighlight
-        style={styles.button}
-        underlayColor="white"
-        onPress={handleSubmit}
-      >
-        <Text style={styles.buttonText}>Confirm Reservation</Text>
-      </TouchableHighlight>
+      <View style={tw`mx-auto mt-8`}>
+        <TouchableHighlight
+          style={tw`w-1/3 p-4 items-center rounded-full bg-blue-700 border-blue-300 border-4 `}
+          underlayColor="white"
+          onPress={handleSubmit}
+        >
+          <Text style={tw`text-blue-300`}>Confirm</Text>
+        </TouchableHighlight>
+      </View>
     </SafeAreaView>
   );
 }
@@ -288,5 +295,13 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.2,
     shadowRadius: 1.41,
     elevation: 2,
+  },
+  bdivide: {
+    borderBottomColor: "white",
+    borderBottomWidth: 1,
+  },
+  tdivide: {
+    borderTopColor: "white",
+    borderTopWidth: 1,
   },
 });
