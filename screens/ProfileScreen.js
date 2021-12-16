@@ -83,16 +83,22 @@ const ProfileScreen = () => {
       />
       <View style={tw`flex-initial m-0 p-0 h-1/3`}>
         <View style={tw`flex-row justify-around m-2`}>
-          <Text style={tw`text-lg font-bold`}>Phone:</Text>
+        <Text numberOfLines={1} ellipsizeMode='tail' style={tw`text-lg`}>
+          <Text style={tw`text-lg font-bold`}>Phone:{" "}</Text>
           <Text style={tw`text-lg`}>{user?.phone}</Text>
+          </Text>
         </View>
         <View style={tw`flex-row justify-around`}>
-          <Text style={tw`text-lg font-bold`}>Address:</Text>
+        <Text numberOfLines={1} ellipsizeMode='tail' style={tw`text-lg`}>
+          <Text style={tw`text-lg font-bold`}>Address:{" "}</Text>
           <Text style={tw`text-lg`}>{user?.address}</Text>
+          </Text>
         </View>
         <View style={tw`flex-row justify-around m-2`}>
-          <Text style={tw`text-lg font-bold`}>Email:</Text>
+        <Text numberOfLines={1} ellipsizeMode='tail' style={tw`text-lg`}>
+          <Text style={tw`text-lg font-bold`}>Email:{" "}</Text>
           <Text style={tw`text-lg`}>{user?.email}</Text>
+          </Text>
         </View>
         <View style={tw`flex-row justify-start m-5`}>
           <TouchableOpacity
