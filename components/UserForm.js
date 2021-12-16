@@ -40,7 +40,7 @@ const UserForm = (person, cancelEdit) => {
       console.log(error.message);
     }
   }, []);
-  
+
   const navigation = useNavigation();
   const UserFormSchema = Yup.object().shape({
     type: Yup.string().required("An account type is required"),
@@ -75,19 +75,19 @@ const UserForm = (person, cancelEdit) => {
       // console.log(
       //   `${type} ${firstname} ${lastname} ${email} ${address} ${owner_uid}`
       // );
-        db.collection("users")
-          .doc(authUser.email)
-          .update({
-            email: email,
-            phone: phone,
-            address: address,
-          })
-          .then((result) =>
-            Alert.alert(
-              "Update Complete",
-              `Your account has been updated ${firstname} ${lastname}`
-            )
-          );
+      db.collection("users")
+        .doc(authUser.email)
+        .update({
+          email: email,
+          phone: phone,
+          address: address,
+        })
+        .then((result) =>
+          Alert.alert(
+            "Update Complete",
+            `Your account has been updated ${firstname} ${lastname}`
+          )
+        );
     } catch (error) {
       console.log(error.message);
       Alert.alert("Attention!", error);
@@ -122,7 +122,14 @@ const UserForm = (person, cancelEdit) => {
         validationSchema={UserFormSchema}
         validateOnMount={true}
       >
-        {({setFieldValue, handleChange, handleBlur, handleSubmit, values, isValid }) => (
+        {({
+          setFieldValue,
+          handleChange,
+          handleBlur,
+          handleSubmit,
+          values,
+          isValid,
+        }) => (
           <>
             <View
               style={[
@@ -136,7 +143,8 @@ const UserForm = (person, cancelEdit) => {
               ]}
             >
               <TextInput
-                editable={false} selectTextOnFocus={false}
+                editable={false}
+                selectTextOnFocus={false}
                 placeholderTextColor="#444"
                 placeholder="First Name"
                 autoCapitalize="words"
@@ -159,7 +167,8 @@ const UserForm = (person, cancelEdit) => {
               ]}
             >
               <TextInput
-                editable={false} selectTextOnFocus={false}
+                editable={false}
+                selectTextOnFocus={false}
                 placeholderTextColor="#444"
                 placeholder="Last Name"
                 autoCapitalize="words"
@@ -172,7 +181,8 @@ const UserForm = (person, cancelEdit) => {
 
             <View style={[styles.inputField, tw`bg-gray-200`]}>
               <TextInput
-                editable={false} selectTextOnFocus={false}
+                editable={false}
+                selectTextOnFocus={false}
                 placeholderTextColor="#444"
                 disabled
                 placeholder="Email"
@@ -203,7 +213,7 @@ const UserForm = (person, cancelEdit) => {
                 refs={phoneInput}
                 value={values.phone}
                 //set default country to canada
-                containerStyle={{width: "100%"}}
+                containerStyle={{ width: "100%" }}
                 placeholder="1234567890"
                 defaultCode="CA"
                 layout="first"
@@ -220,7 +230,8 @@ const UserForm = (person, cancelEdit) => {
             <View style={[styles.inputField, tw`bg-gray-200`]}>
               <TextInput
                 multiline={true}
-                editable={false} selectTextOnFocus={false}
+                editable={false}
+                selectTextOnFocus={false}
                 placeholderTextColor="#444"
                 disabled
                 autoCapitalize="none"
@@ -247,22 +258,26 @@ const UserForm = (person, cancelEdit) => {
                 autoCapitalize="none"
                 textInputProps={{
                   // Any props put in here will go directly onto the TextInput
-                  }}
+                  value: values?.address,
+                  onChangeText: handleChange("address"),
+                }}
                 //noScroll={true}
                 scrollEnabled={true}
                 query={{
                   key: GOOGLE_MAPS_APIKEY,
                   language: "en", // language of the results
-                  components: 'country:ca',
+                  components: "country:ca",
                 }}
                 onPress={(data, details = null) => {
-                  setFieldValue("address", data.description ? data.description : "");
+                  setFieldValue(
+                    "address",
+                    data.description ? data.description : ""
+                  );
                 }}
                 onFail={(error) => console.error(error)}
                 listViewDisplayed="auto"
                 requestUrl={{
-                  url:
-                    "https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api",
+                  url: "https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api",
                   useOnPlatform: "web",
                 }} // this in only required for use on the web. See https://git.io/JflFv    more for details.
                 styles={{
@@ -326,7 +341,7 @@ const UserForm = (person, cancelEdit) => {
                 <Text style={styles.buttonText}>Update</Text>
               </Pressable>
             </View>
-              </>
+          </>
         )}
       </Formik>
     </View>
