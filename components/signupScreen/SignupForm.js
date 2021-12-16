@@ -284,6 +284,7 @@ const SignupForm = () => {
                 query={{
                   key: GOOGLE_MAPS_APIKEY,
                   language: "en", // language of the results
+                  components: 'country:ca',
                 }}
                 onPress={(data, details = null) => {
                   setFieldValue("address", data.description ? data.description : "");
