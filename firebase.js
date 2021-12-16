@@ -60,7 +60,30 @@ export function distance(lat1, lon1, lat2, lon2, unit) {
 
   return dist;
 }
-
+export async function getParkingLots(setData){
+  var allSpots =[];
+  var docRef = await db
+        .collection("parkingLots")
+        .get();
+      docRef.forEach((lot) => {
+        if (lot.exists) {
+          //console.log('parking spots: ');
+          /** */
+          allSpots.push({
+              id: lot.id,
+              city: lot.data().city,
+              company: lot.data().company,
+              feePerHour: lot.data().feePerHour,
+              occupied: lot.data().occupied,
+              parkingAddress: lot.data().parkingAddress,
+              postalCode: lot.data().postalCode,
+              province: lot.data().province,
+              totalParkingSpots: lot.data().totalParkingSpots
+          });
+          setData(allSpots);
+        }
+      });
+}
 export async function getVendorsFiltered(
   vendorsRetrieved,
   origin,
@@ -515,7 +538,17 @@ export async function modifyReservation(reservationItem, setupdateStatus) {
 export function deleteReservation(reservationId){
   db.collection("reservations").doc(reservationId).delete().then(() => {
     console.log("Document successfully deleted!");
-    Alert.alert(`Reservation Deleted: ${reservationItem.id}`);
+    // Alert.alert(`Reservation Deleted: ${reservationItem.id}`);
+    
+  }).catch((error) => {
+      console.error("Error removing document: ", error);
+    });
+}
+
+export function deleteParkingLots(parkingLotId){
+  db.collection("parkingLots").doc(parkingLotId).delete().then(() => {
+    console.log("Document successfully deleted!");
+    Alert.alert(`Parking Lot Deleted: ${parkingLotId}`);
   }).catch((error) => {
       console.error("Error removing document: ", error);
     });
