@@ -36,7 +36,7 @@ const ReservationForm = (location) => {
           </Text>
           <Text style={tw`text-base`}>
             Description(Array or Formatted String):{" "}
-            {`${location.route.params.description[0]}\n${location.route.params.description}`}
+            {`${location.route.params.description}`}
           </Text>
           <Text style={tw`text-base`}>
             Coordinates:
