@@ -24,6 +24,7 @@ const ProfileScreen = () => {
   const navigation = useNavigation();
   const [user, setUser] = useState([]);
   const [editing, setEditing] = useState(false);
+  const [status, setStatus] = useState({});
   const Stack = createNativeStackNavigator();
 
   const setEdit = () => setEditing(true);
@@ -32,24 +33,29 @@ const ProfileScreen = () => {
     try {
       getUser(setUser);
       //console.log("Screen => ", user);
+      unsubscribe();
+      return () => {
+        setStatus({});
+      };
     } catch (error) {
       //
     }
   }, []);
+  const unsubscribe = () => setStatus({ status: "Inactive" });
 
   return editing ? (
     <KeyboardAvoidingWrapper>
-    <SafeAreaView style={tw` h-full flex-1 flex-col`}>
-      <TouchableOpacity
-        onPress={cancelEdit}
-        style={tw`bg-gray-100 absolute top-10 right-0 z-50 p-2 rounded-full shadow-lg`}
-      >
-        <Icon name="cancel" type="fontawesome" color="red" size={30} />
-      </TouchableOpacity>
-      <View>
-      <UserForm person={user} style={tw`justify-end`} />
-      </View>
-    </SafeAreaView>
+      <SafeAreaView style={tw` h-full flex-1 flex-col`}>
+        <TouchableOpacity
+          onPress={cancelEdit}
+          style={tw`bg-gray-100 absolute top-10 right-0 z-50 p-2 rounded-full shadow-lg`}
+        >
+          <Icon name="cancel" type="fontawesome" color="red" size={30} />
+        </TouchableOpacity>
+        <View>
+          <UserForm person={user} style={tw`justify-end`} />
+        </View>
+      </SafeAreaView>
     </KeyboardAvoidingWrapper>
   ) : (
     <SafeAreaView style={tw`h-full flex-1 flex-col pt-10`}>
@@ -76,7 +82,6 @@ const ProfileScreen = () => {
         style={[tw`bg-black mx-3 mt-1 flex-initial flex-shrink`, { height: 1 }]}
       />
       <View style={tw`flex-initial m-0 p-0 h-1/3`}>
-      
         <View style={tw`flex-row justify-around m-2`}>
           <Text style={tw`text-lg font-bold`}>Phone:</Text>
           <Text style={tw`text-lg`}>{user?.phone}</Text>

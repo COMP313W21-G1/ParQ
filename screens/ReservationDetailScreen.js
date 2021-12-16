@@ -5,7 +5,7 @@ import {
   SafeAreaView,
   Button,
   TouchableOpacity,
-  Alert
+  Alert,
 } from "react-native";
 
 import { Icon } from "react-native-elements";
@@ -32,7 +32,7 @@ const ReservationDetailScreen = (props) => {
     //to edit the start and end time make sure you check if the spot, lot, date and time is already reerved
 
     <View style={tw`px-3 flex w-full h-full`}>
-      <Text style={tw`text-center text-4xl font-bold h-1/5 pt-24`}>
+      <Text style={tw`text-center text-3xl font-bold h-1/5 pt-24`}>
         Details for reservation
       </Text>
       <TouchableOpacity

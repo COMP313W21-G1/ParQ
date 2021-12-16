@@ -57,7 +57,9 @@ const FavouriteForm = (location) => {
       style={[SafeViewAndroid.AndroidSafeAreaBottom, tw`bg-white flex-grow`]}
     >
       <View>
-        <Text style={tw`text-2xl text-center font-bold`}>Favourite Form</Text>
+        <Text style={tw`text-2xl text-center font-bold`}>
+          Name Your Favourite
+        </Text>
         <TouchableOpacity
           onPress={() => navigation.goBack(location)}
           style={tw`absolute top-3 left-5 z-50 p-3 rounded-full`}

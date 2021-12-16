@@ -18,7 +18,9 @@ import React, { useEffect, useState } from "react";
 import { useIsFocused, useNavigation } from "@react-navigation/native";
 
 const ReservationItem = ({ reservationItem, nav }) => (
-  <SafeAreaView style={tw`px-4 pt-3 flex-col justify-between w-full`}>
+  <SafeAreaView
+    style={tw`px-4 pt-3 flex-col justify-between w-full border-4 rounded-lg border-gray-400 my-1`}
+  >
     <View style={tw`flex-row justify-evenly w-9/12 m-auto px-8 pb-3`}>
       <Text style={tw`text-blue-600 font-bold`}>
         Res ID: {reservationItem.id}
@@ -45,14 +47,14 @@ const ReservationItem = ({ reservationItem, nav }) => (
       </Text>
     </View>
 
-    <View style={tw`w-1/4 m-auto py-1`}>
+    <SafeAreaView style={tw`w-1/4 m-auto py-1`}>
       <Button
         title="Details"
         onPress={() => {
           nav.navigate("ReservationDetailScreen", { reservationItem });
         }}
       />
-    </View>
+    </SafeAreaView>
   </SafeAreaView>
 );
 
@@ -60,6 +62,7 @@ const ReservationScreen = (props) => {
   const isFocused = useIsFocused();
   const [reservationsList, setReservationsList] = useState([]);
   const navigation = useNavigation();
+  const [status, setStatus] = useState({});
   //const { update } = props.route.params;
 
   fetchReservationListData = async () => {
@@ -73,11 +76,17 @@ const ReservationScreen = (props) => {
 
   useEffect(() => {
     isFocused && fetchReservationListData();
+
+    unsubscribe();
+    return () => {
+      setStatus({});
+    };
   }, [isFocused]);
+  const unsubscribe = () => setStatus({ status: "Inactive" });
 
   return reservationsList.length > 0 ? (
     //if spots are available, add them to the view
-    <SafeAreaView style={tw`mx-auto pt-10`}>
+    <SafeAreaView style={tw`mx-auto pt-10 m-2`}>
       <TouchableOpacity
         onPress={() => navigation.navigate("HomeScreen")}
         style={tw`bg-gray-100 absolute top-8 left-4 z-50 p-2 rounded-full shadow-lg`}
@@ -91,7 +100,7 @@ const ReservationScreen = (props) => {
       <FlatList
         //extraData={reservationsList}
         data={reservationsList}
-        style={tw`border-4 rounded-lg border-gray-400  `}
+        style={tw`  `}
         keyExtractor={(item) => item.id}
         ItemSeparatorComponent={() => (
           <View style={[tw`bg-gray-200`, { height: 1 }]} />
